@@ -35,3 +35,16 @@ body {
 .hidden {
   display: none;
 }
+
+/* Media queries */
+
+/* Large devices (desktops, 992px and up) */
+@media screen and (min-width: 992px) {
+  #application-container {
+    max-width: 800px;
+    height: 80%;
+    border-radius: 40px;
+    padding: 40px;
+    overflow: hidden;
+  }
+}
