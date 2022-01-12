@@ -1,0 +1,22 @@
+/* Configure universal box-sizing to make box model layout calculations easier */
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* Remove default margin and padding for every element on the page to keep
+spacing consistent across browsers */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.hidden {
+  display: none;
+}
