@@ -25,7 +25,7 @@ function applicationInitialization() {
 function manageClickEvent(event) {
   switch (event.target) {
     case btnPlayQuiz:
-      console.log(retrieveCategories());
+      loadCategorySelect();
       break;
     case btnOpenInstructions:
       showElement(instructionsContainer);
@@ -33,6 +33,9 @@ function manageClickEvent(event) {
     case btnCloseInstructions:
     case instructionsContainer:
       hideElement(instructionsContainer);
+      break;
+    case btnCategoryOptions:
+      // Handle category selection
       break;
   }
 }
@@ -65,13 +68,61 @@ function hideElement(element) {
 }
 
 /**
- * Call getData function with the Open Trivia Database Categories URL
+ * Call getData function with the Open Trivia Database Categories URL and
+ * returns its promise
  * @returns {Promise} - Promise for the body of the response
  */
 function retrieveCategories() {
   const categoriesUrl = "https://opentdb.com/api_category.php";
   let categories = getData(categoriesUrl);
   return categories;
+}
+
+/**
+ * Filter categories to select only those desired for the quiz
+ * @param {Object} data - JSON object containing Array of categories
+ * @returns {Array} - Array of Objects
+ */
+function filterCategories(data) {
+  const categoriesArray = data.trivia_categories;
+  let filteredCategories = categoriesArray.filter(category => (
+    category.name === "General Knowledge" ||
+    category.name === "Science & Nature" ||
+    category.name === "Mythology" ||
+    category.name === "Sports" ||
+    category.name === "Geography" ||
+    category.name === "History" ||
+    category.name === "Celebrities" ||
+    category.name === "Animals"
+  ));
+  return filteredCategories;
+}
+
+/**
+ * Adds each category name and id to one of the category options buttons
+ * @param {Array} data - filteredCategories Array
+ */
+function displayCategories(data) {
+  for (let i = 0; i < btnCategoryOptions.length; i++) {
+    btnCategoryOptions[i].innerHTML = data[i].name;
+    btnCategoryOptions[i].setAttribute('data-id', data[i].id);
+  }
+}
+
+/**
+ * Requests the categories and displays them once the promise has been fulfilled
+ */
+async function loadCategorySelect() {
+  hideElement(menuContainerElement);
+  try {
+    // Waits for the promise to resolve
+    const categories = await retrieveCategories();
+    const filteredCategories = filterCategories(categories);
+    displayCategories(filteredCategories);
+    showElement(categorySelectContainer);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 // Add event listeners for buttons
