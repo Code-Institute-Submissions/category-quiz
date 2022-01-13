@@ -83,7 +83,7 @@ body {
   grid-row: rules-btn-top / rules-btn-bottom;
 }
 
-/*  */
+/* Category Selection */
 
 #category-select-container {
   display: grid;
@@ -108,6 +108,63 @@ body {
   gap: 10px;
 }
 
+/* Quiz */
+
+#quiz-container {
+  display: grid;
+  grid-template-columns: [full-width-start] 4fr [full-width-end];
+  grid-template-rows: [header-top] 1fr [header-bottom upper-top] 4fr [upper-bottom lower-top] 4fr [lower-bottom] 1fr;
+  height: 100%;
+  gap: 5px;
+}
+
+#header {
+  display: flex;
+  grid-row: header-top / header-bottom;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#header>* {
+  display: inline;
+  color: var(--white);
+}
+
+#btn-back {
+  border: 1px solid var(--white);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  background-color: unset;
+}
+
+#time-remaining {
+  /* Placeholder for later styles */
+}
+
+#lives-remaining {
+  /* Placeholder for later styles */
+}
+
+#question-container {
+  grid-column: full-width;
+  grid-row: upper-top / upper-bottom;
+  color: var(--white);
+}
+
+#answer-container {
+  grid-column: full-width;
+  grid-row: lower-top / lower-bottom;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#questions-remaining {
+  grid-column: right-info;
+  grid-row: footer-top / footer-bottom;
+}
+
 /* Shared styles */
 
 .hidden {
@@ -124,7 +181,7 @@ body {
   color: white;
 }
 
-.btn-category {
+.btn-game {
   min-width: 300px;
   border: none;
   border-radius: 10px;
