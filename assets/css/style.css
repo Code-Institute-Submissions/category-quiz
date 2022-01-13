@@ -1,3 +1,6 @@
+/* Import font Poppins from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap');
+
 /* Set values used throughout the site as variables to allow for easy alteration */
 :root {
   --body-background: #219EBC;
@@ -30,7 +33,7 @@ body {
   justify-content: center;
   height: 100vh;
   background-color: var(--body-background);
-  font-family: sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 #application-container {
