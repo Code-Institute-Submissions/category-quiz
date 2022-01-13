@@ -12,29 +12,39 @@
 <body>
   <section id="application-container">
 
-    <div id="menu-container" class="hidden">
+    <div id="menu-container">
       <div id="logo-container">Logo</div>
       <button id="btn-play" class="btn-menu">Play</button>
       <button id="btn-instructions" class="btn-menu">Instructions</button>
     </div>
 
-    <div id="category-select-container" class="hidden">
-      <div id="heading">Please Select a Category</div>
-      <div id="categories-container">
-        <button class="btn-game">A</button>
-        <button class="btn-game">B</button>
-        <button class="btn-game">C</button>
-        <button class="btn-game">D</button>
-        <button class="btn-game">E</button>
-        <button class="btn-game">F</button>
-        <button class="btn-game">G</button>
-        <button class="btn-game">H</button>
+    <div id="instructions-container" class="hidden">
+      <div id="instructions-content">
+        <button id="btn-instructions-close" class="btn-close">X</button>
+        <h2>How to play</h2>
+        <p>The quiz consists of 3 rounds, with 3 questions in each round on your chosen topic.</p>
+        <p>You start the quiz with 3 lives, answer incorrectly and you loose a life but can continue to play.</p>
+        <p>If your lives are depleted and you guess incorrectly its game over, but you ca always try again!</p>
       </div>
     </div>
 
-    <div id="quiz-container">
+    <div id="category-select-container" class="hidden">
+      <div id="heading">Please Select a Category</div>
+      <div id="categories-container">
+        <button class="btn-category-option btn-game">A</button>
+        <button class="btn-category-option btn-game">B</button>
+        <button class="btn-category-option btn-game">C</button>
+        <button class="btn-category-option btn-game">D</button>
+        <button class="btn-category-option btn-game">E</button>
+        <button class="btn-category-option btn-game">F</button>
+        <button class="btn-category-option btn-game">G</button>
+        <button class="btn-category-option btn-game">H</button>
+      </div>
+    </div>
+
+    <div id="quiz-container" class="hidden">
       <div id="header">
-        <button id="btn-back">Back</button>
+        <button id="btn-quiz-close" class="btn-close">Back</button>
         <div id="time-remaining">Timer</div>
         <div id="lives-remaining">Number of lives</div>
       </div>
