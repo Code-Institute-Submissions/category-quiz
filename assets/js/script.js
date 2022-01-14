@@ -10,11 +10,40 @@ const categorySelectContainer = document.getElementById('category-select-contain
 const categoriesContainer = document.getElementById('categories-container');
 const btnCategoryOptions = document.querySelectorAll('.btn-category-option');
 
+// Define a class to contain game information
+class Quiz {
+  constructor() {
+    this.numberOfRounds = 3;
+    this.questionsPerRound = 3;
+    this.currentRound = 0;
+    this.currentQuestion = 0;
+    this.livesRemaining = 3;
+  }
+
+  displayCurrentRound() {
+    return this.currentRound + 1;
+  }
+
+  displayCurrentQuestion() {
+    return this.currentQuestion + 1;
+  }
+
+  incrementRound() {
+    this.currentRound++;
+  }
+
+  incrementQuestion() {
+    this.currentQuestion++;
+  }
+}
+
 /**
- * Attach event listener to the 'application-container' element
+ * Attach event listener to the 'application-container' element and create a new
+ * Game class in the global scope
  */
 function applicationInitialization() {
   applicationContainer.addEventListener('click', manageClickEvent);
+  window.currentQuiz = new Quiz();
 }
 
 /**
