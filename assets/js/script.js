@@ -13,11 +13,14 @@ const btnCategoryOptions = document.querySelectorAll('.btn-category-option');
 // Define a class to contain game information
 class Quiz {
   constructor() {
-    this.numberOfRounds = 3;
-    this.questionsPerRound = 3;
+    this.numberOfRounds = 2;
+    this.questionsPerRound = 2;
     this.currentRound = 0;
     this.currentQuestion = 0;
     this.livesRemaining = 3;
+
+    this.customDifficultyLevel = "";
+    this.customDifficultySelected = false;
   }
 
   displayCurrentRound() {
@@ -43,7 +46,6 @@ class Quiz {
  */
 function applicationInitialization() {
   applicationContainer.addEventListener('click', manageClickEvent);
-  window.currentQuiz = new Quiz();
 }
 
 /**
@@ -52,6 +54,15 @@ function applicationInitialization() {
  * @param {*} event - Event to be handled
  */
 function manageClickEvent(event) {
+
+  // Handle click events for reusable buttons with no id retrieved with
+  // querySelectorAll
+  if (event.target.matches('.btn-category-option')) {
+    loadQuiz(event.target.getAttribute('data-id'));
+  }
+
+  // Handle click events for single use buttons with id retrieved with
+  // getElementById
   switch (event.target) {
     case btnPlayQuiz:
       loadCategorySelect();
@@ -63,16 +74,13 @@ function manageClickEvent(event) {
     case instructionsContainer:
       hideElement(instructionsContainer);
       break;
-    case btnCategoryOptions:
-      // Handle category selection
-      break;
   }
 }
 
 /**
  * Fetch data from a URL and return promise
  * @param {String} endpoint - URL of the resource to fetch
- * @returns {Promise} - Promise for the body of the response
+ * @returns - Promise for the body of the response
  */
 async function getData(endpoint) {
   const response = await fetch(endpoint);
@@ -99,7 +107,7 @@ function hideElement(element) {
 /**
  * Call getData function with the Open Trivia Database Categories URL and
  * returns its promise
- * @returns {Promise} - Promise for the body of the response
+ * @returns - Promise for the body of the response
  */
 function retrieveCategories() {
   const categoriesUrl = "https://opentdb.com/api_category.php";
@@ -110,7 +118,7 @@ function retrieveCategories() {
 /**
  * Filter categories to select only those desired for the quiz
  * @param {Object} data - JSON object containing Array of categories
- * @returns {Array} - Array of Objects
+ * @returns - Array of Objects
  */
 function filterCategories(data) {
   const categoriesArray = data.trivia_categories;
@@ -138,10 +146,55 @@ function displayCategories(filteredCategoriesArray) {
   }
 }
 
+async function retrieveQuestions(categoryId) {
+  const defaultDifficultyLevels = ['easy', 'medium', 'hard'];
+  const customDifficulty = currentQuiz.customDifficultyLevel;
+  const numberOfRounds = currentQuiz.numberOfRounds;
+  let questionsUrl = "";
+
+  allQuizQuestions = [];
+
+  for (let i = 0; i <= numberOfRounds; i++) {
+    if (currentQuiz.customDifficultySelected === true) {
+      questionsUrl = `https://opentdb.com/api.php?amount=3&category=${categoryId}&difficulty=${customDifficulty}&type=multiple`;
+    } else {
+      questionsUrl = `https://opentdb.com/api.php?amount=3&category=${categoryId}&difficulty=${defaultDifficultyLevels[i]}&type=multiple`;
+    }
+    // Fetch 3 questions on the chosen topic at the selected/default difficulty
+    let threeQuestions = await getData(questionsUrl);
+    let formattedQuestions = formatQuestions(threeQuestions.results);
+    allQuizQuestions.push(formattedQuestions);
+  }
+  return (allQuizQuestions);
+}
+
+/**
+ * 
+ * @param {Array} questions - Array of questions returned from the fetch request
+ * @returns - Re-formatted questions
+ */
+function formatQuestions(questions) {
+  let formattedQuestions = [];
+  questions.forEach(element => {
+    let question = {};
+    let answerArray = [];
+    question.question = element.question;
+    // Create array of answer choices
+    answerArray.push(element.incorrect_answers);
+    answerArray.push(element.correct_answer);
+    // Assign answers to question object
+    question.answers = answerArray;
+    question.correctAnswer = element.correct_answer;
+    // TODO: Shuffle array and check encoding
+    formattedQuestions.push(question);
+  });
+  return formattedQuestions;
+}
+
 /**
  * Requests the categories and displays them once the promise has been fulfilled
  */
-async function loadCategorySelect() {
+ async function loadCategorySelect() {
   hideElement(menuContainerElement);
   try {
     // Waits for the promise to resolve
@@ -154,7 +207,13 @@ async function loadCategorySelect() {
   }
 }
 
+async function loadQuiz(categoryId) {
+  const questions = await retrieveQuestions(categoryId);
+  console.log(questions);
+}
+
 // Add event listeners for buttons
 document.addEventListener('DOMContentLoaded', function () {
   applicationInitialization();
+  window.currentQuiz = new Quiz();
 });
