@@ -100,12 +100,12 @@ function filterCategories(data) {
 
 /**
  * Adds each category name and id to one of the category options buttons
- * @param {Array} data - filteredCategories Array
+ * @param {Array} filteredCategoriesArray - filteredCategories Array
  */
-function displayCategories(data) {
+function displayCategories(filteredCategoriesArray) {
   for (let i = 0; i < btnCategoryOptions.length; i++) {
-    btnCategoryOptions[i].innerHTML = data[i].name;
-    btnCategoryOptions[i].setAttribute('data-id', data[i].id);
+    btnCategoryOptions[i].innerHTML = filteredCategoriesArray[i].name;
+    btnCategoryOptions[i].setAttribute('data-id', filteredCategoriesArray[i].id);
   }
 }
 
