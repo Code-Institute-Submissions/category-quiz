@@ -8,7 +8,10 @@ const instructionsContainer = document.getElementById('instructions-container');
 const btnCloseInstructions = document.getElementById('btn-instructions-close');
 const categorySelectContainer = document.getElementById('category-select-container');
 const categoriesContainer = document.getElementById('categories-container');
-const btnCategoryOptions = document.querySelectorAll('.btn-category-option');
+const btnCategories = document.querySelectorAll('.btn-category');
+const quizContainer = document.getElementById('quiz-container');
+const questionTextArea = document.getElementById('question-text');
+const btnAnswers = document.querySelectorAll('.btn-answer');
 
 // Define a class to contain game information
 class Quiz {
@@ -57,8 +60,12 @@ function manageClickEvent(event) {
 
   // Handle click events for reusable buttons with no id retrieved with
   // querySelectorAll
-  if (event.target.matches('.btn-category-option')) {
+  if (event.target.matches('.btn-category')) {
     loadQuiz(event.target.getAttribute('data-id'));
+  }
+
+  if (event.target.matches('.btn-answer')) {
+    // TODO: Check Answer
   }
 
   // Handle click events for single use buttons with id retrieved with
@@ -136,16 +143,23 @@ function filterCategories(data) {
 }
 
 /**
- * Adds each category name and id to one of the category options buttons
- * @param {Array} filteredCategoriesArray - filteredCategories Array
+ * Adds each category name and id to a property of the category button elements
+ * @param {Array} filteredCategoriesArray - Array of categories
  */
 function displayCategories(filteredCategoriesArray) {
-  for (let i = 0; i < btnCategoryOptions.length; i++) {
-    btnCategoryOptions[i].innerHTML = filteredCategoriesArray[i].name;
-    btnCategoryOptions[i].setAttribute('data-id', filteredCategoriesArray[i].id);
+  for (let i = 0; i < btnCategories.length; i++) {
+    btnCategories[i].innerHTML = filteredCategoriesArray[i].name;
+    btnCategories[i].setAttribute('data-id', filteredCategoriesArray[i].id);
   }
 }
 
+/**
+ * Retrieve and format quiz questions
+ * @param {Int} categoryId - Number used to identify the category selected. Used
+ * in subsequent fetch request.
+ * @returns - Array containing multiple Arrays of questions, each representing a
+ * round of the quiz
+ */
 async function retrieveQuestions(categoryId) {
   const defaultDifficultyLevels = ['easy', 'medium', 'hard'];
   const customDifficulty = currentQuiz.customDifficultyLevel;
@@ -165,36 +179,53 @@ async function retrieveQuestions(categoryId) {
     let formattedQuestions = formatQuestions(threeQuestions.results);
     allQuizQuestions.push(formattedQuestions);
   }
+
+  /**
+ * Takes an Array of objects (question and answers) returned from the API re-formats
+ * then before adding to a new array.
+ * @param {Array} questions - Array of questions returned from the fetch request
+ * @returns - Re-formatted questions
+ */
+  function formatQuestions(questions) {
+    let formattedQuestions = [];
+    questions.forEach(element => {
+      let question = {};
+      let answerArray = [];
+      question.question = element.question;
+      // Create array of answer choices
+      answerArray = element.incorrect_answers;
+      answerArray.push(element.correct_answer);
+      // Assign answers to question object
+      question.answers = answerArray;
+      question.correctAnswer = element.correct_answer;
+      // TODO: Shuffle array and check encoding
+      formattedQuestions.push(question);
+    });
+    return formattedQuestions;
+  }
   return (allQuizQuestions);
 }
 
 /**
- * 
- * @param {Array} questions - Array of questions returned from the fetch request
- * @returns - Re-formatted questions
+ * Adds a question and its possible answers to a property of the question text
+ * area element and the answer button elements
+ * @param {Array} questions - Specially formatted array of questions and answers
  */
-function formatQuestions(questions) {
-  let formattedQuestions = [];
-  questions.forEach(element => {
-    let question = {};
-    let answerArray = [];
-    question.question = element.question;
-    // Create array of answer choices
-    answerArray.push(element.incorrect_answers);
-    answerArray.push(element.correct_answer);
-    // Assign answers to question object
-    question.answers = answerArray;
-    question.correctAnswer = element.correct_answer;
-    // TODO: Shuffle array and check encoding
-    formattedQuestions.push(question);
-  });
-  return formattedQuestions;
+function displayQuestion(questions) {
+  const round = currentQuiz.currentRound;
+  const question = currentQuiz.currentQuestion;
+  //CHEAT
+  console.log(`Correct Answer = ${questions[round][question].correctAnswer}`);
+  questionTextArea.innerHTML = questions[round][question].question;
+  for (let i = 0; i < btnAnswers.length; i++) {
+    btnAnswers[i].innerHTML = questions[round][question].answers[i];
+  }
 }
 
 /**
  * Requests the categories and displays them once the promise has been fulfilled
  */
- async function loadCategorySelect() {
+async function loadCategorySelect() {
   hideElement(menuContainerElement);
   try {
     // Waits for the promise to resolve
@@ -207,9 +238,20 @@ function formatQuestions(questions) {
   }
 }
 
+/**
+ * Requests the quiz questions and answers and displays them once the promise
+ * has been fulfilled
+ * @param {*} categoryId 
+ */
 async function loadQuiz(categoryId) {
-  const questions = await retrieveQuestions(categoryId);
-  console.log(questions);
+  hideElement(categorySelectContainer);
+  try {
+    const questions = await retrieveQuestions(categoryId);
+    displayQuestion(questions);
+    showElement(quizContainer);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 // Add event listeners for buttons
