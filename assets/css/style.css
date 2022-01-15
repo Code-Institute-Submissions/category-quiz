@@ -5,6 +5,8 @@
 :root {
   --body-background: #219EBC;
   --application-background: #034769;
+  --correct-answer: #2A9D8F;
+  --incorrect-answer: #D5573B;
   --white: #ffffff;
 }
 
@@ -224,6 +226,14 @@ body {
   height: 40px;
   background-color: unset;
   color: var(--white);
+}
+
+.correct-answer {
+  background-color: var(--correct-answer);
+}
+
+.incorrect-answer {
+  background-color: var(--incorrect-answer);
 }
 
 /* Media queries */

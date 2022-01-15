@@ -60,12 +60,17 @@ function manageClickEvent(event) {
 
   // Handle click events for reusable buttons with no id retrieved with
   // querySelectorAll
+
+  // Category buttons
   if (event.target.matches('.btn-category')) {
     loadQuiz(event.target.getAttribute('data-id'));
   }
 
+  // Quiz answer buttons
   if (event.target.matches('.btn-answer')) {
-    // TODO: Check Answer
+    if (event.target.matches('.btn-answer')) {
+      const result = checkAnswer(event.target);
+    }
   }
 
   // Handle click events for single use buttons with id retrieved with
@@ -211,16 +216,39 @@ async function retrieveQuestions(categoryId) {
  * area element and the answer button elements
  * @param {Array} questions - Specially formatted array of questions and answers
  */
-function displayQuestion(questions) {
-  const round = currentQuiz.currentRound;
-  const question = currentQuiz.currentQuestion;
-  //CHEAT
-  console.log(`Correct Answer = ${questions[round][question].correctAnswer}`);
-  questionTextArea.innerHTML = questions[round][question].question;
+function displayQuestion() {
+  const questions = currentQuiz.questions;
+  const roundNumber = currentQuiz.currentRound;
+  const questionNumber = currentQuiz.currentQuestion;
+  console.log(`Correct Answer = ${questions[roundNumber][questionNumber].correctAnswer}`); // DEBUG
+  questionTextArea.innerHTML = questions[roundNumber][questionNumber].question;
   for (let i = 0; i < btnAnswers.length; i++) {
-    btnAnswers[i].innerHTML = questions[round][question].answers[i];
+    btnAnswers[i].innerHTML = questions[roundNumber][questionNumber].answers[i];
   }
 }
+
+/**
+ *  Checks the selected answer against the correct answer
+ * @param {Object} element - HTML element containing selected answer
+ */
+function checkAnswer(element) {
+  console.log(typeof (element));
+  const questions = currentQuiz.questions;
+  const roundNumber = currentQuiz.currentRound;
+  const questionNumber = currentQuiz.currentQuestion;
+  const selectedAnswer = element.innerHTML;
+  const question = currentQuiz.currentQuestion;
+  if (selectedAnswer == questions[roundNumber][questionNumber].correctAnswer) {
+    console.log(`CORRECT - ${selectedAnswer}!`); // DEBUG
+    element.classList.add('correct-answer');
+    // TODO: Next question, increment question and round
+  } else {
+    console.log("WRONG - TRY AGAIN!"); // DEBUG
+    element.classList.add('incorrect-answer');
+    // TODO: Decrement lives
+  }
+}
+
 
 /**
  * Requests the categories and displays them once the promise has been fulfilled
@@ -247,7 +275,9 @@ async function loadQuiz(categoryId) {
   hideElement(categorySelectContainer);
   try {
     const questions = await retrieveQuestions(categoryId);
-    displayQuestion(questions);
+    // Add the question to the currentQuiz Object
+    currentQuiz.questions = questions;
+    displayQuestion();
     showElement(quizContainer);
   } catch (e) {
     console.log(e);
