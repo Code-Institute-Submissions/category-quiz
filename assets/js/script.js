@@ -57,7 +57,7 @@ function applicationInitialization() {
 
 /**
  * Handles click events - Adapted from https://github.com/lukebinmore/2048
- * https://github.com/lukebinmore/2048/blob/ab3fb81ca162d5bd8e282daeeb44439508e5e2b8/assets/js/index.js#L55
+ * https://github.com/lukebinmore/2048/blob/ab3fb81ca162d5bd8e282daeeb44439508e5e2b8/assets/js/index.js#L55-L88
  * @param {*} event - Event to be handled
  */
 function manageClickEvent(event) {
@@ -190,11 +190,12 @@ async function retrieveQuestions(categoryId) {
   }
 
   /**
- * Takes an Array of objects (question and answers) returned from the API re-formats
- * then before adding to a new array.
- * @param {Array} questions - Array of questions returned from the fetch request
- * @returns - Re-formatted questions
- */
+  * Takes an Array of objects (question and answers) returned from the API
+  * re-formats then before adding to a new array.
+  * @param {Array} questions - Array of questions returned from the fetch
+  * request
+  * @returns - Re-formatted questions
+  */
   function formatQuestions(questions) {
     let formattedQuestions = [];
     questions.forEach(element => {
@@ -286,7 +287,7 @@ function advanceQuiz() {
 }
 
 /**
- * Requests the categories and displays them once the promise has been fulfilled
+ * Request categories and displays them once the promise has been fulfilled
  */
 async function loadCategorySelect() {
   hideElement(menuContainerElement);
