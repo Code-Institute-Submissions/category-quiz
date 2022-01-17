@@ -29,6 +29,8 @@ class Quiz {
     this.customDifficultyLevel = "";
     this.customDifficultySelected = false;
 
+    this.quizActive = true;
+
     // Player progress tracking
     this.totalCorrectAnswers = 0;
   }
@@ -51,6 +53,9 @@ class Quiz {
 
   decrementLives() {
     this.livesRemaining--;
+    if (this.livesRemaining === 0) {
+      this.quizActive = false;
+    }
   }
 
   resetQuestionNumber() {
@@ -257,18 +262,22 @@ function checkAnswer(element) {
   const questionNumber = currentQuiz.currentQuestion;
   const selectedAnswer = element.innerHTML;
   const question = currentQuiz.currentQuestion;
-  if (selectedAnswer == questions[roundNumber][questionNumber].correctAnswer) {
-    console.log(`CORRECT - ${selectedAnswer}!`); // DEBUG
+  const correctAnswer = questions[roundNumber][questionNumber].correctAnswer;
+
+  if (selectedAnswer == correctAnswer) {
     element.classList.add('correct-answer');
-    // TODO: Next question, increment question and round
     currentQuiz.incrementTotalCorrectAnswers();
     advanceQuiz();
   } else {
-    console.log("WRONG - TRY AGAIN!"); // DEBUG
     element.classList.add('incorrect-answer');
-    // TODO: Decrement lives
     currentQuiz.decrementLives();
     updateDisplayedStats();
+
+    // Check if quiz over due to no lives remaining;
+    const quizActive = currentQuiz.quizActive;
+    if (!quizActive) {
+      quizComplete('No Lives Remaining');
+    }
   }
 }
 
@@ -299,21 +308,29 @@ function advanceQuiz() {
   if (questionNumber < (questionsPerRound)) {
     // Not last question in round so increment the currentQuestion
     currentQuiz.incrementQuestion();
+    setTimeout(displayQuestion, 1000);
   } else {
     // Last question in round
-    if (roundNumber === (numberOfRounds)) {
-      // This is round 3 so the game is over
-      // TODO: Display Game Over
-      console.log(`Winner of game!`); // DEBUG
-    } else {
-      // Not last question in the game so increment currentRound
+    if (roundNumber != (numberOfRounds)) {
+      // Not last question in the quiz so increment currentRound
       currentQuiz.incrementRound();
       currentQuiz.resetQuestionNumber();
+      setTimeout(displayQuestion, 1000);
+    } else {
+      // This is the last question of the last round so the quiz is over
+      quizComplete('Winner');
     }
   }
-  // Display next question
   // TODO: Disable buttons, Enable for next question
-  setTimeout(displayQuestion, 1000);
+
+}
+
+/**
+ * DEBUG: Log the win condition to the console
+ * @param {String} reason - Win condition
+ */
+function quizComplete(winCondition) {
+  console.log(`GAME OVER REACHED - ${winCondition}`);
 }
 
 /**
