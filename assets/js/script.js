@@ -1,7 +1,7 @@
 //  Global variables
 // HTML Objects to be manipulated and used to manage click events
 const applicationContainer = document.getElementById('application-container');
-const menuContainerElement = document.getElementById('menu-container');
+const menuContainer = document.getElementById('menu-container');
 const btnPlayQuiz = document.getElementById('btn-play');
 const btnOpenInstructions = document.getElementById('btn-instructions');
 const instructionsContainer = document.getElementById('instructions-container');
@@ -12,26 +12,29 @@ const btnCategories = document.querySelectorAll('.btn-category');
 const quizContainer = document.getElementById('quiz-container');
 const questionTextArea = document.getElementById('question-text');
 const btnAnswers = document.querySelectorAll('.btn-answer');
+const livesRemainingElement = document.getElementById('lives-remaining');
+const questionsRemainingElement = document.getElementById('questions-remaining');
 
 // Define a class to contain game information
 class Quiz {
   constructor() {
+    // Default initial quiz variables
     this.numberOfRounds = 2;
     this.questionsPerRound = 2;
     this.currentRound = 0;
     this.currentQuestion = 0;
     this.livesRemaining = 3;
+    this.totalNumberOfQuestions = (this.numberOfRounds + 1) * (this.questionsPerRound + 1);
 
     this.customDifficultyLevel = "";
     this.customDifficultySelected = false;
+
+    // Player progress tracking
+    this.totalCorrectAnswers = 0;
   }
 
   displayCurrentRound() {
     return this.currentRound + 1;
-  }
-
-  displayCurrentQuestion() {
-    return this.currentQuestion + 1;
   }
 
   incrementRound() {
@@ -40,6 +43,14 @@ class Quiz {
 
   incrementQuestion() {
     this.currentQuestion++;
+  }
+
+  incrementTotalCorrectAnswers() {
+    this.totalCorrectAnswers++;
+  }
+
+  decrementLives() {
+    this.livesRemaining--;
   }
 
   resetQuestionNumber() {
@@ -173,12 +184,13 @@ async function retrieveQuestions(categoryId) {
   const defaultDifficultyLevels = ['easy', 'medium', 'hard'];
   const customDifficulty = currentQuiz.customDifficultyLevel;
   const numberOfRounds = currentQuiz.numberOfRounds;
+  const customDifficultySelected = currentQuiz.customDifficultySelected;
   let questionsUrl = "";
 
   allQuizQuestions = [];
 
   for (let i = 0; i <= numberOfRounds; i++) {
-    if (currentQuiz.customDifficultySelected === true) {
+    if (customDifficultySelected.customDifficultySelected === true) {
       questionsUrl = `https://opentdb.com/api.php?amount=3&category=${categoryId}&difficulty=${customDifficulty}&type=multiple`;
     } else {
       questionsUrl = `https://opentdb.com/api.php?amount=3&category=${categoryId}&difficulty=${defaultDifficultyLevels[i]}&type=multiple`;
@@ -232,6 +244,7 @@ function displayQuestion() {
     btnAnswers[i].innerHTML = questions[roundNumber][questionNumber].answers[i];
     btnAnswers[i].classList.remove('correct-answer', 'incorrect-answer');
   }
+  updateDisplayedStats();
 }
 
 /**
@@ -248,12 +261,29 @@ function checkAnswer(element) {
     console.log(`CORRECT - ${selectedAnswer}!`); // DEBUG
     element.classList.add('correct-answer');
     // TODO: Next question, increment question and round
+    currentQuiz.incrementTotalCorrectAnswers();
     advanceQuiz();
   } else {
     console.log("WRONG - TRY AGAIN!"); // DEBUG
     element.classList.add('incorrect-answer');
     // TODO: Decrement lives
+    currentQuiz.decrementLives();
+    updateDisplayedStats();
   }
+}
+
+/**
+ * Update numbers of lives and question remaining
+ */
+function updateDisplayedStats() {
+  const livesRemaining = currentQuiz.livesRemaining;
+  const numberOfRounds = currentQuiz.numberOfRounds + 1;
+  const totalCorrectAnswers = currentQuiz.totalCorrectAnswers + 1;
+  const totalQuestions = currentQuiz.totalNumberOfQuestions;
+  const currentQuestionNumber = numberOfRounds - (numberOfRounds - totalCorrectAnswers);
+
+  livesRemainingElement.innerHTML = livesRemaining;
+  questionsRemainingElement.innerHTML = `Question ${currentQuestionNumber} of ${totalQuestions}`;
 }
 
 /**
@@ -290,7 +320,7 @@ function advanceQuiz() {
  * Request categories and displays them once the promise has been fulfilled
  */
 async function loadCategorySelect() {
-  hideElement(menuContainerElement);
+  hideElement(menuContainer);
   try {
     // Waits for the promise to resolve
     const categories = await retrieveCategories();
