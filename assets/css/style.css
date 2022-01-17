@@ -193,6 +193,11 @@ body {
   grid-row: footer-top / footer-bottom;
 }
 
+/* Padding to the left of the Font Awesome icon */
+.fa-heart {
+  padding: 5px;
+}
+
 /* Shared styles */
 
 .hidden {
