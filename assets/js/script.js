@@ -249,6 +249,10 @@ function displayQuestion() {
     btnAnswers[i].innerHTML = questions[roundNumber][questionNumber].answers[i];
     btnAnswers[i].classList.remove('correct-answer', 'incorrect-answer');
   }
+  // New question ready so ensure the answer buttons are enabled
+  enableAnswerButtons();
+  //Update the displayed statistics (updated question progress will be
+  //displayed)
   updateDisplayedStats();
 }
 
@@ -266,20 +270,23 @@ function checkAnswer(element) {
 
   setTimeout(element.classList.add('tentative-answer'));
 
-  // TODO: DisbaleButtons
+  // Disable buttons while answer is checked
+  disableAnswerButtons();
   if (selectedAnswer == correctAnswer) {
     setTimeout(() => {
       element.classList.replace('tentative-answer', 'correct-answer');
       currentQuiz.incrementTotalCorrectAnswers();
       advanceQuiz();
-      // TODO: enableButtons
     }, 1000);
   } else {
     setTimeout(() => {
       setTimeout(element.classList.replace('tentative-answer', 'incorrect-answer'), 1000);
       currentQuiz.decrementLives();
+      //Update the displayed statistics (updated lives remaining will be
+      //displayed)
       updateDisplayedStats();
-      // TODO: enableButtons
+      // Incorrect answer so enable buttons while answer is checked
+      enableAnswerButtons();
     }, 1000);
     // Check if quiz over due to no lives remaining;
     const quizActive = currentQuiz.quizActive;
@@ -287,6 +294,24 @@ function checkAnswer(element) {
       quizComplete('No Lives Remaining');
     }
   }
+}
+
+/**
+ * Enable answer buttons
+ */
+function enableAnswerButtons() {
+  btnAnswers.forEach((element) => {
+    element.removeAttribute('disabled');
+  });
+}
+
+/**
+ * Disable answer buttons
+ */
+function disableAnswerButtons() {
+  btnAnswers.forEach((element) => {
+    element.setAttribute('disabled', true);
+  });
 }
 
 /**
