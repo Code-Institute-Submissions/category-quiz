@@ -304,6 +304,11 @@ function checkAnswer(element) {
       // Check if quiz over due to no lives remaining;
       const quizActive = currentQuiz.quizActive;
       if (!quizActive) {
+        // No lives remaining so highlight correct answer and end quiz
+        disableAnswerButtons();
+        let btnAnswersArray = Array.from(btnAnswers);
+        let correctAnswerButton = btnAnswersArray.find(element => element.innerHTML == correctAnswer);
+        correctAnswerButton.classList.add('correct-answer');
         quizComplete('No Lives Remaining');
       }
     }, 1000);
