@@ -264,15 +264,23 @@ function checkAnswer(element) {
   const question = currentQuiz.currentQuestion;
   const correctAnswer = questions[roundNumber][questionNumber].correctAnswer;
 
-  if (selectedAnswer == correctAnswer) {
-    element.classList.add('correct-answer');
-    currentQuiz.incrementTotalCorrectAnswers();
-    advanceQuiz();
-  } else {
-    element.classList.add('incorrect-answer');
-    currentQuiz.decrementLives();
-    updateDisplayedStats();
+  setTimeout(element.classList.add('tentative-answer'));
 
+  // TODO: DisbaleButtons
+  if (selectedAnswer == correctAnswer) {
+    setTimeout(() => {
+      element.classList.replace('tentative-answer', 'correct-answer');
+      currentQuiz.incrementTotalCorrectAnswers();
+      advanceQuiz();
+      // TODO: enableButtons
+    }, 1000);
+  } else {
+    setTimeout(() => {
+      setTimeout(element.classList.replace('tentative-answer', 'incorrect-answer'), 1000);
+      currentQuiz.decrementLives();
+      updateDisplayedStats();
+      // TODO: enableButtons
+    }, 1000);
     // Check if quiz over due to no lives remaining;
     const quizActive = currentQuiz.quizActive;
     if (!quizActive) {
@@ -321,8 +329,6 @@ function advanceQuiz() {
       quizComplete('Winner');
     }
   }
-  // TODO: Disable buttons, Enable for next question
-
 }
 
 /**

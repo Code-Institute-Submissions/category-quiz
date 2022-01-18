@@ -241,6 +241,10 @@ body {
   background-color: var(--incorrect-answer);
 }
 
+.tentative-answer {
+  background-color: black;
+}
+
 /* Media queries */
 
 /* Large devices (desktops, 992px and up) */
