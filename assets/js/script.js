@@ -23,7 +23,7 @@ class Quiz {
     this.questionsPerRound = 2;
     this.currentRound = 0;
     this.currentQuestion = 0;
-    this.livesRemaining = 3;
+    this.livesRemaining = 2;
     this.totalNumberOfQuestions = (this.numberOfRounds + 1) * (this.questionsPerRound + 1);
 
     this.customDifficultyLevel = "";
@@ -293,7 +293,7 @@ function checkAnswer(element) {
  * Update numbers of lives and question remaining
  */
 function updateDisplayedStats() {
-  const livesRemaining = currentQuiz.livesRemaining;
+  const livesRemaining = currentQuiz.livesRemaining + 1;
   const numberOfRounds = currentQuiz.numberOfRounds + 1;
   const totalCorrectAnswers = currentQuiz.totalCorrectAnswers + 1;
   const totalQuestions = currentQuiz.totalNumberOfQuestions;
