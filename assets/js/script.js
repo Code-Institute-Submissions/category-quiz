@@ -24,7 +24,14 @@ class Quiz {
     this.currentRound = 0;
     this.currentQuestion = 0;
     this.livesRemaining = 3;
-    this.totalNumberOfQuestions = (this.numberOfRounds + 1) * (this.questionsPerRound + 1);
+
+    /* 
+    DEBUG: Code for custom quiz
+    currentQuiz.customDifficultySelected = true;
+    currentQuiz.customDifficultyLevel = "easy";
+    currentQuiz.numberOfRounds = 0;
+    currentQuiz.questionsPerRound = custom number of questions;
+    */
 
     this.customDifficultyLevel = "";
     this.customDifficultySelected = false;
@@ -190,13 +197,20 @@ async function retrieveQuestions(categoryId) {
   const customDifficulty = currentQuiz.customDifficultyLevel;
   const numberOfRounds = currentQuiz.numberOfRounds;
   const customDifficultySelected = currentQuiz.customDifficultySelected;
+  const questionsPerRound = currentQuiz.questionsPerRound;
   let questionsUrl = "";
-
   allQuizQuestions = [];
 
   for (let i = 0; i <= numberOfRounds; i++) {
-    if (customDifficultySelected.customDifficultySelected === true) {
-      questionsUrl = `https://opentdb.com/api.php?amount=3&category=${categoryId}&difficulty=${customDifficulty}&type=multiple`;
+    if (customDifficultySelected == true) {
+      // FIX: When specifying a customer number of questions this is specified
+      // as human a human readable number but must be entered into the class
+      // reduced by one to ensure arrays are the correct length.
+
+      // The API expects the number of questions as a human readable number so
+      // the questionsPerRound+1 specified below is to account for this and
+      // allow the quiz to work as expected.
+      questionsUrl = `https://opentdb.com/api.php?amount=${questionsPerRound + 1}&category=${categoryId}&difficulty=${customDifficulty}&type=multiple`;
     } else {
       questionsUrl = `https://opentdb.com/api.php?amount=3&category=${categoryId}&difficulty=${defaultDifficultyLevels[i]}&type=multiple`;
     }
@@ -321,7 +335,7 @@ function updateDisplayedStats() {
   const livesRemaining = currentQuiz.livesRemaining;
   const numberOfRounds = currentQuiz.numberOfRounds + 1;
   const totalCorrectAnswers = currentQuiz.totalCorrectAnswers + 1;
-  const totalQuestions = currentQuiz.totalNumberOfQuestions;
+  const totalQuestions = (currentQuiz.numberOfRounds + 1) * (currentQuiz.questionsPerRound + 1);
   const currentQuestionNumber = numberOfRounds - (numberOfRounds - totalCorrectAnswers);
 
   livesRemainingElement.innerHTML = livesRemaining;
