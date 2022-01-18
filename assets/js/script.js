@@ -1,7 +1,7 @@
 //  Global variables
 // HTML Objects to be manipulated and used to manage click events
 const applicationContainer = document.getElementById('application-container');
-const menuContainerElement = document.getElementById('menu-container');
+const menuContainer = document.getElementById('menu-container');
 const btnPlayQuiz = document.getElementById('btn-play');
 const btnOpenInstructions = document.getElementById('btn-instructions');
 const instructionsContainer = document.getElementById('instructions-container');
@@ -12,26 +12,38 @@ const btnCategories = document.querySelectorAll('.btn-category');
 const quizContainer = document.getElementById('quiz-container');
 const questionTextArea = document.getElementById('question-text');
 const btnAnswers = document.querySelectorAll('.btn-answer');
+const livesRemainingElement = document.getElementById('lives-remaining');
+const questionsRemainingElement = document.getElementById('questions-remaining');
 
 // Define a class to contain game information
 class Quiz {
   constructor() {
+    // Default initial quiz variables
     this.numberOfRounds = 2;
     this.questionsPerRound = 2;
     this.currentRound = 0;
     this.currentQuestion = 0;
     this.livesRemaining = 3;
 
+    /* 
+    DEBUG: Code for custom quiz
+    currentQuiz.customDifficultySelected = true;
+    currentQuiz.customDifficultyLevel = "easy";
+    currentQuiz.numberOfRounds = 0;
+    currentQuiz.questionsPerRound = custom number of questions;
+    */
+
     this.customDifficultyLevel = "";
     this.customDifficultySelected = false;
+
+    this.quizActive = true;
+
+    // Player progress tracking
+    this.totalCorrectAnswers = 0;
   }
 
   displayCurrentRound() {
     return this.currentRound + 1;
-  }
-
-  displayCurrentQuestion() {
-    return this.currentQuestion + 1;
   }
 
   incrementRound() {
@@ -40,6 +52,17 @@ class Quiz {
 
   incrementQuestion() {
     this.currentQuestion++;
+  }
+
+  incrementTotalCorrectAnswers() {
+    this.totalCorrectAnswers++;
+  }
+
+  decrementLives() {
+    this.livesRemaining--;
+    if (this.livesRemaining === 0) {
+      this.quizActive = false;
+    }
   }
 
   resetQuestionNumber() {
@@ -57,7 +80,7 @@ function applicationInitialization() {
 
 /**
  * Handles click events - Adapted from https://github.com/lukebinmore/2048
- * https://github.com/lukebinmore/2048/blob/ab3fb81ca162d5bd8e282daeeb44439508e5e2b8/assets/js/index.js#L55
+ * https://github.com/lukebinmore/2048/blob/ab3fb81ca162d5bd8e282daeeb44439508e5e2b8/assets/js/index.js#L55-L88
  * @param {*} event - Event to be handled
  */
 function manageClickEvent(event) {
@@ -173,13 +196,21 @@ async function retrieveQuestions(categoryId) {
   const defaultDifficultyLevels = ['easy', 'medium', 'hard'];
   const customDifficulty = currentQuiz.customDifficultyLevel;
   const numberOfRounds = currentQuiz.numberOfRounds;
+  const customDifficultySelected = currentQuiz.customDifficultySelected;
+  const questionsPerRound = currentQuiz.questionsPerRound;
   let questionsUrl = "";
-
   allQuizQuestions = [];
 
   for (let i = 0; i <= numberOfRounds; i++) {
-    if (currentQuiz.customDifficultySelected === true) {
-      questionsUrl = `https://opentdb.com/api.php?amount=3&category=${categoryId}&difficulty=${customDifficulty}&type=multiple`;
+    if (customDifficultySelected == true) {
+      // FIX: When specifying a customer number of questions this is specified
+      // as human a human readable number but must be entered into the class
+      // reduced by one to ensure arrays are the correct length.
+
+      // The API expects the number of questions as a human readable number so
+      // the questionsPerRound+1 specified below is to account for this and
+      // allow the quiz to work as expected.
+      questionsUrl = `https://opentdb.com/api.php?amount=${questionsPerRound + 1}&category=${categoryId}&difficulty=${customDifficulty}&type=multiple`;
     } else {
       questionsUrl = `https://opentdb.com/api.php?amount=3&category=${categoryId}&difficulty=${defaultDifficultyLevels[i]}&type=multiple`;
     }
@@ -190,11 +221,12 @@ async function retrieveQuestions(categoryId) {
   }
 
   /**
- * Takes an Array of objects (question and answers) returned from the API re-formats
- * then before adding to a new array.
- * @param {Array} questions - Array of questions returned from the fetch request
- * @returns - Re-formatted questions
- */
+  * Takes an Array of objects (question and answers) returned from the API
+  * re-formats then before adding to a new array.
+  * @param {Array} questions - Array of questions returned from the fetch
+  * request
+  * @returns - Re-formatted questions
+  */
   function formatQuestions(questions) {
     let formattedQuestions = [];
     questions.forEach(element => {
@@ -231,6 +263,11 @@ function displayQuestion() {
     btnAnswers[i].innerHTML = questions[roundNumber][questionNumber].answers[i];
     btnAnswers[i].classList.remove('correct-answer', 'incorrect-answer');
   }
+  // New question ready so ensure the answer buttons are enabled
+  enableAnswerButtons();
+  //Update the displayed statistics (updated question progress will be
+  //displayed)
+  updateDisplayedStats();
 }
 
 /**
@@ -243,16 +280,71 @@ function checkAnswer(element) {
   const questionNumber = currentQuiz.currentQuestion;
   const selectedAnswer = element.innerHTML;
   const question = currentQuiz.currentQuestion;
-  if (selectedAnswer == questions[roundNumber][questionNumber].correctAnswer) {
-    console.log(`CORRECT - ${selectedAnswer}!`); // DEBUG
-    element.classList.add('correct-answer');
-    // TODO: Next question, increment question and round
-    advanceQuiz();
+  const correctAnswer = questions[roundNumber][questionNumber].correctAnswer;
+
+  setTimeout(element.classList.add('tentative-answer'));
+
+  // Disable buttons while answer is checked
+  disableAnswerButtons();
+  if (selectedAnswer == correctAnswer) {
+    setTimeout(() => {
+      element.classList.replace('tentative-answer', 'correct-answer');
+      currentQuiz.incrementTotalCorrectAnswers();
+      advanceQuiz();
+    }, 1000);
   } else {
-    console.log("WRONG - TRY AGAIN!"); // DEBUG
-    element.classList.add('incorrect-answer');
-    // TODO: Decrement lives
+    setTimeout(() => {
+      setTimeout(element.classList.replace('tentative-answer', 'incorrect-answer'), 1000);
+      currentQuiz.decrementLives();
+      //Update the displayed statistics (updated lives remaining will be
+      //displayed)
+      updateDisplayedStats();
+      // Incorrect answer so enable buttons while answer is checked
+      enableAnswerButtons();
+      // Check if quiz over due to no lives remaining;
+      const quizActive = currentQuiz.quizActive;
+      if (!quizActive) {
+        // No lives remaining so highlight correct answer and end quiz
+        disableAnswerButtons();
+        let btnAnswersArray = Array.from(btnAnswers);
+        let correctAnswerButton = btnAnswersArray.find(element => element.innerHTML == correctAnswer);
+        correctAnswerButton.classList.add('correct-answer');
+        quizComplete('No Lives Remaining');
+      }
+    }, 1000);
   }
+}
+
+/**
+ * Enable answer buttons
+ */
+function enableAnswerButtons() {
+  btnAnswers.forEach((element) => {
+    element.removeAttribute('disabled');
+  });
+}
+
+/**
+ * Disable answer buttons
+ */
+function disableAnswerButtons() {
+  btnAnswers.forEach((element) => {
+    element.setAttribute('disabled', true);
+  });
+}
+
+/**
+ * Update numbers of lives and question remaining
+ */
+function updateDisplayedStats() {
+  const livesRemaining = currentQuiz.livesRemaining;
+  const numberOfRounds = currentQuiz.numberOfRounds + 1;
+  const totalCorrectAnswers = currentQuiz.totalCorrectAnswers + 1;
+  const totalQuestions = (currentQuiz.numberOfRounds + 1) * (currentQuiz.questionsPerRound + 1);
+  const currentQuestionNumber = numberOfRounds - (numberOfRounds - totalCorrectAnswers);
+
+  livesRemainingElement.innerHTML = livesRemaining;
+  questionsRemainingElement.innerHTML = `Question ${currentQuestionNumber} of ${totalQuestions}`;
 }
 
 /**
@@ -268,28 +360,34 @@ function advanceQuiz() {
   if (questionNumber < (questionsPerRound)) {
     // Not last question in round so increment the currentQuestion
     currentQuiz.incrementQuestion();
+    setTimeout(displayQuestion, 1000);
   } else {
     // Last question in round
-    if (roundNumber === (numberOfRounds)) {
-      // This is round 3 so the game is over
-      // TODO: Display Game Over
-      console.log(`Winner of game!`); // DEBUG
-    } else {
-      // Not last question in the game so increment currentRound
+    if (roundNumber != (numberOfRounds)) {
+      // Not last question in the quiz so increment currentRound
       currentQuiz.incrementRound();
       currentQuiz.resetQuestionNumber();
+      setTimeout(displayQuestion, 1000);
+    } else {
+      // This is the last question of the last round so the quiz is over
+      quizComplete('Winner');
     }
   }
-  // Display next question
-  // TODO: Disable buttons, Enable for next question
-  setTimeout(displayQuestion, 1000);
 }
 
 /**
- * Requests the categories and displays them once the promise has been fulfilled
+ * DEBUG: Log the win condition to the console
+ * @param {String} reason - Win condition
+ */
+function quizComplete(winCondition) {
+  console.log(`GAME OVER REACHED - ${winCondition}`);
+}
+
+/**
+ * Request categories and displays them once the promise has been fulfilled
  */
 async function loadCategorySelect() {
-  hideElement(menuContainerElement);
+  hideElement(menuContainer);
   try {
     // Waits for the promise to resolve
     const categories = await retrieveCategories();
