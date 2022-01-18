@@ -23,7 +23,7 @@ class Quiz {
     this.questionsPerRound = 2;
     this.currentRound = 0;
     this.currentQuestion = 0;
-    this.livesRemaining = 2;
+    this.livesRemaining = 3;
     this.totalNumberOfQuestions = (this.numberOfRounds + 1) * (this.questionsPerRound + 1);
 
     this.customDifficultyLevel = "";
@@ -287,12 +287,12 @@ function checkAnswer(element) {
       updateDisplayedStats();
       // Incorrect answer so enable buttons while answer is checked
       enableAnswerButtons();
+      // Check if quiz over due to no lives remaining;
+      const quizActive = currentQuiz.quizActive;
+      if (!quizActive) {
+        quizComplete('No Lives Remaining');
+      }
     }, 1000);
-    // Check if quiz over due to no lives remaining;
-    const quizActive = currentQuiz.quizActive;
-    if (!quizActive) {
-      quizComplete('No Lives Remaining');
-    }
   }
 }
 
@@ -318,7 +318,7 @@ function disableAnswerButtons() {
  * Update numbers of lives and question remaining
  */
 function updateDisplayedStats() {
-  const livesRemaining = currentQuiz.livesRemaining + 1;
+  const livesRemaining = currentQuiz.livesRemaining;
   const numberOfRounds = currentQuiz.numberOfRounds + 1;
   const totalCorrectAnswers = currentQuiz.totalCorrectAnswers + 1;
   const totalQuestions = currentQuiz.totalNumberOfQuestions;
