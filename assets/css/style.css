@@ -66,7 +66,7 @@ body {
 #menu-container {
   display: grid;
   grid-template-columns: [full-width-start] 1fr [centre-start] 2fr [centre-end] 1fr [full-width-end];
-  grid-template-rows: 1fr [logo-top] 6fr [logo-bottom] 1fr [play-btn-top] 1fr [play-btn-bottom rules-btn-top] 1fr [rules-btn-bottom] 1fr;
+  grid-template-rows: 1fr [logo-top] 5fr [logo-bottom] 1fr [btn-top] 3fr [btn-bottom] 1fr;
   gap: 10px;
   height: 100%;
 }
@@ -78,19 +78,21 @@ body {
   background-color: var(--white);
 }
 
-#btn-play {
+#menu-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   grid-column: centre;
-  grid-row: play-btn-top / play-btn-bottom;
+  grid-row: btn-top / btn-bottom;
 }
 
-#btn-instructions {
-  grid-column: centre;
-  grid-row: rules-btn-top / rules-btn-bottom;
+#menu-buttons-container>* {
+  flex: 1;
 }
 
 /* Instructions */
 
-#instructions-container {
+.background-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -99,7 +101,7 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-#instructions-content {
+.background-content {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -166,8 +168,8 @@ body {
   /* Placeholder for later styles */
 }
 
-#time-remaining {
-  /* Placeholder for later styles */
+#current-difficulty {
+  text-transform: capitalize;
 }
 
 #lives-remaining {
@@ -191,6 +193,16 @@ body {
 #questions-remaining {
   grid-column: right-info;
   grid-row: footer-top / footer-bottom;
+}
+
+#loading-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  padding: 10px;
+  color: var(--white);
 }
 
 /* Padding to the left of the Font Awesome icon */
@@ -256,7 +268,7 @@ body {
     padding: 40px;
   }
 
-  #instructions-content {
+  .background-content {
     width: 700px;
   }
 }

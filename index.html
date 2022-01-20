@@ -14,12 +14,35 @@
 
     <div id="menu-container">
       <div id="logo-container">Logo</div>
-      <button id="btn-play" class="btn-menu">Play</button>
-      <button id="btn-instructions" class="btn-menu">Instructions</button>
+      <div id="menu-buttons-container">
+        <button id="btn-play" class="btn-menu">Play</button>
+        <button id="btn-instructions" class="btn-menu">Instructions</button>
+        <button id="btn-settings" class="btn-menu">Settings</button>
+      </div>
     </div>
 
-    <div id="instructions-container" class="hidden">
-      <div id="instructions-content">
+    <div id="settings-container" class="background-container hidden">
+      <div id="settings-content" class="background-content">
+        <button id="btn-settings-close" class="btn-close">X</button>
+        <h2>Settings</h2>
+        <p>Set up your own quiz by selecting the difficulty and number of questions between 1 and 20 you would like.</p>
+        <form action="">
+          <label for="custom-difficulty">Difficulty:</label>
+          <select id="custom-difficulty" name="difficulty" required>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          <label for="custom-number-of-questions">Number of Questions</label>
+          <input id="custom-number-of-questions" type="number" min="1" step="1" max="20" value="9">
+          <button id="btn-settings-save" type="submit">Save</button>
+          <button id="btn-settings-reset" type="submit">Reset</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="instructions-container" class="background-container hidden">
+      <div id="instructions-content" class="background-content">
         <button id="btn-instructions-close" class="btn-close">X</button>
         <h2>How to play</h2>
         <p>The quiz consists of 3 rounds, with 3 questions in each round on your chosen topic.</p>
@@ -31,21 +54,13 @@
     <div id="category-select-container" class="hidden">
       <div id="heading">Please Select a Category</div>
       <div id="categories-container">
-        <button class="btn-category btn-game">A</button>
-        <button class="btn-category btn-game">B</button>
-        <button class="btn-category btn-game">C</button>
-        <button class="btn-category btn-game">D</button>
-        <button class="btn-category btn-game">E</button>
-        <button class="btn-category btn-game">F</button>
-        <button class="btn-category btn-game">G</button>
-        <button class="btn-category btn-game">H</button>
       </div>
     </div>
 
     <div id="quiz-container" class="hidden">
       <div id="header">
         <button id="btn-quiz-close" class="btn-close">Back</button>
-        <div id="time-remaining">Timer</div>
+        <div id="current-difficulty">Difficulty</div>
         <div><i class="fas fa-heart"></i><span id="lives-remaining">Number of lives</span></div>
       </div>
       <div id="question-container">
@@ -58,6 +73,19 @@
         <button class="btn-answer btn-game">C</button>
         <button class="btn-answer btn-game">D</button>
       </div>
+    </div>
+
+    <div id="quiz-end-container" class="background-container hidden">
+      <div id="quiz-end-content" class="background-content">
+        <p>Game Over!</p>
+        <p id="quiz-end-stats"></p>
+        <button>Play again</button>
+        <button>Menu</button>
+      </div>
+    </div>
+
+    <div id="loading-container" class="hidden">
+      Loading...
     </div>
 
   </section>
