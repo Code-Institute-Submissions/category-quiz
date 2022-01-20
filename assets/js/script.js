@@ -151,7 +151,13 @@ function saveSettings(event) {
   currentQuiz.numberOfRounds = 0;
   currentQuiz.customDifficultyLevel = customDifficulty.value;
   currentQuiz.questionsPerRound = parseInt(customNumberOfQuestions.value) - 1;
-  hideElement(settingsContainer);
+
+  // TODO: Button class to highlight change made
+  btnSaveSettings.innerHTML = "Saved!";
+  setTimeout(() => {
+    btnSaveSettings.innerHTML = "Save";
+    hideElement(settingsContainer);
+  }, 1000);
 }
 
 /**
@@ -161,7 +167,13 @@ function saveSettings(event) {
 function resetSettings(event) {
   event.preventDefault();
   window.currentQuiz = new Quiz();
-  hideElement(settingsContainer);
+
+  // TODO: Button class to highlight change made
+  btnResetSettings.innerHTML = "Reset!";
+  setTimeout(() => {
+    btnResetSettings.innerHTML = "Reset";
+    hideElement(settingsContainer);
+  }, 1000);
 }
 
 /**
