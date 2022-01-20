@@ -195,6 +195,16 @@ body {
   grid-row: footer-top / footer-bottom;
 }
 
+#loading-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  padding: 10px;
+  color: var(--white);
+}
+
 /* Padding to the left of the Font Awesome icon */
 .fa-heart {
   padding: 5px;

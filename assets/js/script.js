@@ -23,6 +23,7 @@ const currentDifficulty = document.getElementById('current-difficulty');
 const livesRemainingElement = document.getElementById('lives-remaining');
 const quizEndContainer = document.getElementById('quiz-end-container');
 const quizEndStats = document.getElementById('quiz-end-stats');
+const loadingContainer = document.getElementById('loading-container');
 
 // Define a class to contain game information
 class Quiz {
@@ -517,11 +518,13 @@ function quizComplete(winCondition, answer="") {
  */
 async function loadCategorySelect() {
   hideElement(menuContainer);
+  showElement(loadingContainer);
   try {
     // Waits for the promise to resolve
     const categories = await retrieveCategories();
     const filteredCategories = filterCategories(categories);
     displayCategories(filteredCategories);
+    hideElement(loadingContainer);
     showElement(categorySelectContainer);
   } catch (e) {
     console.log(e);
@@ -535,11 +538,13 @@ async function loadCategorySelect() {
  */
 async function loadQuiz(categoryId) {
   hideElement(categorySelectContainer);
+  showElement(loadingContainer);
   try {
     const questions = await retrieveQuestions(categoryId);
     // Add the question to the currentQuiz Object
     currentQuiz.questions = questions;
     displayQuestion();
+    hideElement(loadingContainer);
     showElement(quizContainer);
   } catch (e) {
     console.log(e);
