@@ -97,7 +97,7 @@ function manageClickEvent(event) {
   // Quiz answer buttons
   if (event.target.matches('.btn-answer')) {
     if (event.target.matches('.btn-answer')) {
-      const result = checkAnswer(event.target);
+      checkAnswer(event.target);
     }
   }
 
@@ -383,7 +383,6 @@ function checkAnswer(element) {
   const roundNumber = currentQuiz.currentRound;
   const questionNumber = currentQuiz.currentQuestion;
   const selectedAnswer = element.innerHTML;
-  const question = currentQuiz.currentQuestion;
   const correctAnswer = questions[roundNumber][questionNumber].correctAnswer;
 
   setTimeout(element.classList.add('tentative-answer'));
