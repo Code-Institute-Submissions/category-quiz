@@ -1,4 +1,5 @@
-//  Global variables
+// --- Global variables ---
+
 // HTML Objects to be manipulated and used to manage click events
 const applicationContainer = document.getElementById('application-container');
 const menuContainer = document.getElementById('menu-container');
@@ -14,41 +15,26 @@ const btnCloseInstructions = document.getElementById('btn-instructions-close');
 const categorySelectContainer = document.getElementById('category-select-container');
 const categoriesContainer = document.getElementById('categories-container');
 const quizContainer = document.getElementById('quiz-container');
+const questionsRemainingElement = document.getElementById('questions-remaining');
 const questionTextArea = document.getElementById('question-text');
 const btnAnswers = document.querySelectorAll('.btn-answer');
 const btnQuizBack = document.getElementById('btn-quiz-close');
 const livesRemainingElement = document.getElementById('lives-remaining');
-const questionsRemainingElement = document.getElementById('questions-remaining');
 
 // Define a class to contain game information
 class Quiz {
   constructor() {
-    // Default initial quiz variables
+    // Initialize default quiz variables
     this.numberOfRounds = 2;
     this.questionsPerRound = 2;
     this.currentRound = 0;
     this.currentQuestion = 0;
     this.livesRemaining = 3;
-
-    /* 
-    DEBUG: Code for custom quiz
-    currentQuiz.customDifficultySelected = true;
-    currentQuiz.customDifficultyLevel = "easy";
-    currentQuiz.numberOfRounds = 0;
-    currentQuiz.questionsPerRound = custom number of questions;
-    */
-
     this.customDifficultyLevel = "";
     this.customDifficultySelected = false;
-
     this.quizActive = true;
-
     // Player progress tracking
     this.totalCorrectAnswers = 0;
-  }
-
-  displayCurrentRound() {
-    return this.currentRound + 1;
   }
 
   incrementRound() {
@@ -83,6 +69,8 @@ class Quiz {
   }
 }
 
+// --- Event listener and handler ---
+
 /**
  * Attach event listener to the 'application-container' element and create a new
  * Game class in the global scope
@@ -94,10 +82,9 @@ function applicationInitialization() {
 /**
  * Handles click events - Adapted from https://github.com/lukebinmore/2048
  * https://github.com/lukebinmore/2048/blob/ab3fb81ca162d5bd8e282daeeb44439508e5e2b8/assets/js/index.js#L55-L88
- * @param {*} event - Event to be handled
+ * @param {*} event Event to be handled
  */
 function manageClickEvent(event) {
-
   // Handle click events for reusable buttons with no id retrieved with
   // querySelectorAll
 
@@ -126,10 +113,8 @@ function manageClickEvent(event) {
       hideElement(settingsContainer);
       break;
     case btnSaveSettings:
-      // Save settings
       saveSettings(event);
       break;
-    // Display settings
     case btnResetSettings:
       resetSettings(event);
       break;
@@ -151,9 +136,60 @@ function manageClickEvent(event) {
   }
 }
 
+// --- API call --
+
+/**
+ * Fetch data from a URL and return promise
+ * @param {String} endpoint URL of the resource to fetch
+ * @returns Promise for the body of the response
+ */
+async function getData(endpoint) {
+  const response = await fetch(endpoint);
+  const data = await response.json();
+  return data;
+}
+
+// --- DOM Manipulation ---
+
+/**
+ * Removes the 'hidden' CSS class to an element
+ * @param {Object} element HTML element to be shown
+ */
+function showElement(element) {
+  element.classList.remove('hidden');
+}
+
+/**
+ * Adds the 'hidden' CSS class to an element
+ * @param {Object} element HTML element to be hidden
+ */
+function hideElement(element) {
+  element.classList.add('hidden');
+}
+
+/**
+ * Enable answer buttons
+ */
+function enableAnswerButtons() {
+  btnAnswers.forEach((element) => {
+    element.removeAttribute('disabled');
+  });
+}
+
+/**
+ * Disable answer buttons
+ */
+function disableAnswerButtons() {
+  btnAnswers.forEach((element) => {
+    element.setAttribute('disabled', true);
+  });
+}
+
+// --- Save / Reset Custom Quiz Settings ---
+
 /**
  * Save custom quiz settings
- * @param {*} event - Form submit event to be handled
+ * @param {*} event Form submit event to be handled
  */
 function saveSettings(event) {
   event.preventDefault();
@@ -163,7 +199,6 @@ function saveSettings(event) {
   currentQuiz.numberOfRounds = 0;
   currentQuiz.customDifficultyLevel = customDifficulty.value;
   currentQuiz.questionsPerRound = parseInt(customNumberOfQuestions.value) - 1;
-
   // TODO: Button class to highlight change made
   btnSaveSettings.innerHTML = "Saved!";
   setTimeout(() => {
@@ -174,12 +209,11 @@ function saveSettings(event) {
 
 /**
  * Reset quiz settings
- * @param {*} event - Form submit event to be handled
+ * @param {*} event Form submit event to be handled
  */
 function resetSettings(event) {
   event.preventDefault();
   window.currentQuiz = new Quiz();
-
   // TODO: Button class to highlight change made
   btnResetSettings.innerHTML = "Reset!";
   setTimeout(() => {
@@ -188,37 +222,12 @@ function resetSettings(event) {
   }, 1000);
 }
 
-/**
- * Fetch data from a URL and return promise
- * @param {String} endpoint - URL of the resource to fetch
- * @returns - Promise for the body of the response
- */
-async function getData(endpoint) {
-  const response = await fetch(endpoint);
-  const data = await response.json();
-  return data;
-}
-
-/**
- * Removes the 'hidden' CSS class to an element
- * @param {Object} element - HTML element to be shown
- */
-function showElement(element) {
-  element.classList.remove('hidden');
-}
-
-/**
- * Adds the 'hidden' CSS class to an element
- * @param {Object} element - HTML element to be hidden
- */
-function hideElement(element) {
-  element.classList.add('hidden');
-}
+// --- Get and Display Categories ---
 
 /**
  * Call getData function with the Open Trivia Database Categories URL and
  * returns its promise
- * @returns - Promise for the body of the response
+ * @returns Promise for the body of the response
  */
 function retrieveCategories() {
   const categoriesUrl = "https://opentdb.com/api_category.php";
@@ -228,8 +237,8 @@ function retrieveCategories() {
 
 /**
  * Filter categories to select only those desired for the quiz
- * @param {Object} data - JSON object containing Array of categories
- * @returns - Array of Objects
+ * @param {Object} data JSON object containing Array of categories
+ * @returns Array of Objects
  */
 function filterCategories(data) {
   const categoriesArray = data.trivia_categories;
@@ -250,7 +259,7 @@ function filterCategories(data) {
  * Create a button element for each array element (filteredCategoriesArray), add
  * the name and id to a property of the button and append to the categories
  * container
- * @param {Array} filteredCategoriesArray - Array of categories
+ * @param {Array} filteredCategoriesArray Array of categories
  */
 function displayCategories(filteredCategoriesArray) {
   categoriesContainer.innerHTML = "";
@@ -264,12 +273,12 @@ function displayCategories(filteredCategoriesArray) {
   }
 }
 
+// --- Get and Display Questions ---
+
 /**
  * Retrieve and format quiz questions
- * @param {Int} categoryId - Number used to identify the category selected. Used
- * in subsequent fetch request.
- * @returns - Array containing multiple Arrays of questions, each representing a
- * round of the quiz
+ * @param {Int} categoryId Number used to identify the category selected.
+ * @returns 2D array of questions, each representing a round of the quiz
  */
 async function retrieveQuestions(categoryId) {
   const defaultDifficultyLevels = ['easy', 'medium', 'hard'];
@@ -281,10 +290,6 @@ async function retrieveQuestions(categoryId) {
   allQuizQuestions = [];
   for (let i = 0; i <= numberOfRounds; i++) {
     if (customDifficultySelected == true) {
-      // FIX: When specifying a customer number of questions this is specified
-      // as human a human readable number but must be entered into the class
-      // reduced by one to ensure arrays are the correct length.
-
       // The API expects the number of questions as a human readable number so
       // the questionsPerRound+1 specified below is to account for this and
       // allow the quiz to work as expected.
@@ -293,8 +298,8 @@ async function retrieveQuestions(categoryId) {
       questionsUrl = `https://opentdb.com/api.php?amount=3&category=${categoryId}&difficulty=${defaultDifficultyLevels[i]}&type=multiple`;
     }
     // Fetch 3 questions on the chosen topic at the selected/default difficulty
-    let threeQuestions = await getData(questionsUrl);
-    let formattedQuestions = formatQuestions(threeQuestions.results);
+    const questionsData = await getData(questionsUrl);
+    const formattedQuestions = formatQuestions(questionsData.results);
     allQuizQuestions.push(formattedQuestions);
   }
 
@@ -314,9 +319,9 @@ async function retrieveQuestions(categoryId) {
   /**
   * Takes an Array of objects (question and answers) returned from the API
   * re-formats then before adding to a new array.
-  * @param {Array} questions - Array of questions returned from the fetch
+  * @param {Array} questions Array of questions returned from the fetch
   * request
-  * @returns - Re-formatted questions
+  * @returns Re-formatted questions
   */
   function formatQuestions(questions) {
     let formattedQuestions = [];
@@ -345,7 +350,7 @@ async function retrieveQuestions(categoryId) {
 /**
  * Adds a question and its possible answers to a property of the question text
  * area element and the answer button elements
- * @param {Array} questions - Specially formatted array of questions and answers
+ * @param {Array} questions Specially formatted array of questions and answers
  */
 function displayQuestion() {
   const questions = currentQuiz.questions;
@@ -365,9 +370,11 @@ function displayQuestion() {
   updateDisplayedStats();
 }
 
+// --- Check Selected Answer ---
+
 /**
  *  Checks the selected answer against the correct answer
- * @param {Object} element - HTML element containing selected answer
+ * @param {Object} element HTML element containing selected answer
  */
 function checkAnswer(element) {
   const questions = currentQuiz.questions;
@@ -410,37 +417,7 @@ function checkAnswer(element) {
   }
 }
 
-/**
- * Enable answer buttons
- */
-function enableAnswerButtons() {
-  btnAnswers.forEach((element) => {
-    element.removeAttribute('disabled');
-  });
-}
-
-/**
- * Disable answer buttons
- */
-function disableAnswerButtons() {
-  btnAnswers.forEach((element) => {
-    element.setAttribute('disabled', true);
-  });
-}
-
-/**
- * Update numbers of lives and question remaining
- */
-function updateDisplayedStats() {
-  const livesRemaining = currentQuiz.livesRemaining;
-  const numberOfRounds = currentQuiz.numberOfRounds + 1;
-  const totalCorrectAnswers = currentQuiz.totalCorrectAnswers + 1;
-  const totalQuestions = (currentQuiz.numberOfRounds + 1) * (currentQuiz.questionsPerRound + 1);
-  const currentQuestionNumber = numberOfRounds - (numberOfRounds - totalCorrectAnswers);
-
-  livesRemainingElement.innerHTML = livesRemaining;
-  questionsRemainingElement.innerHTML = `Question ${currentQuestionNumber} of ${totalQuestions}`;
-}
+// --- Advance Quiz and Update Statistics ---
 
 /**
  * Advances quiz, increments questionNumber, roundNumber and determines if game
@@ -471,12 +448,30 @@ function advanceQuiz() {
 }
 
 /**
+ * Update numbers of lives and question remaining
+ */
+function updateDisplayedStats() {
+  const livesRemaining = currentQuiz.livesRemaining;
+  const numberOfRounds = currentQuiz.numberOfRounds + 1;
+  const totalCorrectAnswers = currentQuiz.totalCorrectAnswers + 1;
+  const totalQuestions = (currentQuiz.numberOfRounds + 1) * (currentQuiz.questionsPerRound + 1);
+  const currentQuestionNumber = numberOfRounds - (numberOfRounds - totalCorrectAnswers);
+
+  livesRemainingElement.innerHTML = livesRemaining;
+  questionsRemainingElement.innerHTML = `Question ${currentQuestionNumber} of ${totalQuestions}`;
+}
+
+// --- Handle Quiz End ---
+
+/**
  * DEBUG: Log the win condition to the console
- * @param {String} reason - Win condition
+ * @param {String} reason Win condition
  */
 function quizComplete(winCondition) {
   console.log(`GAME OVER REACHED - ${winCondition}`);
 }
+
+// --- Load separate elements / Pages of the Quiz Application ---
 
 /**
  * Request categories and displays them once the promise has been fulfilled
@@ -497,7 +492,7 @@ async function loadCategorySelect() {
 /**
  * Requests the quiz questions and answers and displays them once the promise
  * has been fulfilled
- * @param {*} categoryId 
+ * @param {Int} categoryId Number used to identify the category selected.
  */
 async function loadQuiz(categoryId) {
   hideElement(categorySelectContainer);
