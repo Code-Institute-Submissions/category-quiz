@@ -21,6 +21,8 @@ const btnAnswers = document.querySelectorAll('.btn-answer');
 const btnQuizBack = document.getElementById('btn-quiz-close');
 const currentDifficulty = document.getElementById('current-difficulty');
 const livesRemainingElement = document.getElementById('lives-remaining');
+const quizEndContainer = document.getElementById('quiz-end-container');
+const quizEndStats = document.getElementById('quiz-end-stats');
 
 // Define a class to contain game information
 class Quiz {
@@ -412,7 +414,7 @@ function checkAnswer(element) {
         let btnAnswersArray = Array.from(btnAnswers);
         let correctAnswerButton = btnAnswersArray.find(element => element.innerHTML == correctAnswer);
         correctAnswerButton.classList.add('correct-answer');
-        quizComplete('No Lives Remaining');
+        quizComplete(0, correctAnswer); // No Lives Remaining
       }
     }, 1000);
   }
@@ -443,7 +445,7 @@ function advanceQuiz() {
       setTimeout(displayQuestion, 1000);
     } else {
       // This is the last question of the last round so the quiz is over
-      quizComplete('Winner');
+      quizComplete(1, ""); // Win
     }
   }
 }
@@ -473,8 +475,24 @@ function updateDisplayInfo() {
  * DEBUG: Log the win condition to the console
  * @param {String} reason Win condition
  */
-function quizComplete(winCondition) {
-  console.log(`GAME OVER REACHED - ${winCondition}`);
+function quizComplete(winCondition, answer="") {
+  const totalCorrectAnswers = currentQuiz.totalCorrectAnswers;
+  let htmlContent = "";
+
+  // hideElement(quizContainer);
+  if (winCondition === 0) {
+    htmlContent = `
+    No more lives!\nYou answered ${totalCorrectAnswers} correctly.
+    `;
+  } else {
+    htmlContent = `
+    You Win!\nYou answered ${totalCorrectAnswers} correctly.
+    `;
+  }
+  quizEndStats.innerHTML = htmlContent;
+  setTimeout(() => {
+    showElement(quizEndContainer);
+  }, 1500);
 }
 
 // --- Load separate elements / Pages of the Quiz Application ---
