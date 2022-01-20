@@ -13,7 +13,6 @@ const instructionsContainer = document.getElementById('instructions-container');
 const btnCloseInstructions = document.getElementById('btn-instructions-close');
 const categorySelectContainer = document.getElementById('category-select-container');
 const categoriesContainer = document.getElementById('categories-container');
-const btnCategories = document.querySelectorAll('.btn-category');
 const quizContainer = document.getElementById('quiz-container');
 const questionTextArea = document.getElementById('question-text');
 const btnAnswers = document.querySelectorAll('.btn-answer');
@@ -248,13 +247,20 @@ function filterCategories(data) {
 }
 
 /**
- * Adds each category name and id to a property of the category button elements
+ * Create a button element for each array element (filteredCategoriesArray), add
+ * the name and id to a property of the button and append to the categories
+ * container
  * @param {Array} filteredCategoriesArray - Array of categories
  */
 function displayCategories(filteredCategoriesArray) {
-  for (let i = 0; i < btnCategories.length; i++) {
-    btnCategories[i].innerHTML = filteredCategoriesArray[i].name;
-    btnCategories[i].setAttribute('data-id', filteredCategoriesArray[i].id);
+  categoriesContainer.innerHTML = "";
+  let newCategoryButton = "";
+  for (let i = 0; i < filteredCategoriesArray.length; i++) {
+    newCategoryButton = document.createElement('button');
+    newCategoryButton.innerHTML = filteredCategoriesArray[i].name;
+    newCategoryButton.setAttribute('data-id', filteredCategoriesArray[i].id);
+    newCategoryButton.classList.add('btn-category', 'btn-game');
+    categoriesContainer.appendChild(newCategoryButton);
   }
 }
 
