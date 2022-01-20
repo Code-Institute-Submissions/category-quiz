@@ -3,7 +3,12 @@
 const applicationContainer = document.getElementById('application-container');
 const menuContainer = document.getElementById('menu-container');
 const btnPlayQuiz = document.getElementById('btn-play');
+const btnOpenSettings = document.getElementById('btn-settings');
 const btnOpenInstructions = document.getElementById('btn-instructions');
+const settingsContainer = document.getElementById('settings-container');
+const btnCloseSettings = document.getElementById('btn-settings-close');
+const btnSaveSettings = document.getElementById('btn-settings-save');
+const btnResetSettings = document.getElementById('btn-settings-reset');
 const instructionsContainer = document.getElementById('instructions-container');
 const btnCloseInstructions = document.getElementById('btn-instructions-close');
 const categorySelectContainer = document.getElementById('category-select-container');
@@ -65,6 +70,10 @@ class Quiz {
     }
   }
 
+  resetLives() {
+    this.livesRemaining = 3;
+  }
+
   resetQuestionNumber() {
     this.currentQuestion = 0;
   }
@@ -106,6 +115,20 @@ function manageClickEvent(event) {
     case btnPlayQuiz:
       loadCategorySelect();
       break;
+    case btnOpenSettings:
+      showElement(settingsContainer);
+      break;
+    case btnCloseSettings:
+      hideElement(settingsContainer);
+      break;
+    case btnSaveSettings:
+      // Save settings
+      saveSettings(event);
+      break;
+    // Display settings
+    case btnResetSettings:
+      resetSettings(event);
+      break;
     case btnOpenInstructions:
       showElement(instructionsContainer);
       break;
@@ -114,6 +137,31 @@ function manageClickEvent(event) {
       hideElement(instructionsContainer);
       break;
   }
+}
+
+/**
+ * Save custom quiz settings
+ * @param {*} event - Form submit event to be handled
+ */
+function saveSettings(event) {
+  event.preventDefault();
+  const customDifficulty = document.getElementById('custom-difficulty');
+  const customNumberOfQuestions = document.getElementById('custom-number-of-questions');
+  currentQuiz.customDifficultySelected = true;
+  currentQuiz.numberOfRounds = 0;
+  currentQuiz.customDifficultyLevel = customDifficulty.value;
+  currentQuiz.questionsPerRound = parseInt(customNumberOfQuestions.value) - 1;
+  hideElement(settingsContainer);
+}
+
+/**
+ * Reset quiz settings
+ * @param {*} event - Form submit event to be handled
+ */
+function resetSettings(event) {
+  event.preventDefault();
+  window.currentQuiz = new Quiz();
+  hideElement(settingsContainer);
 }
 
 /**
