@@ -17,6 +17,7 @@ const btnCategories = document.querySelectorAll('.btn-category');
 const quizContainer = document.getElementById('quiz-container');
 const questionTextArea = document.getElementById('question-text');
 const btnAnswers = document.querySelectorAll('.btn-answer');
+const btnQuizBack = document.getElementById('btn-quiz-close');
 const livesRemainingElement = document.getElementById('lives-remaining');
 const questionsRemainingElement = document.getElementById('questions-remaining');
 
@@ -77,6 +78,10 @@ class Quiz {
   resetQuestionNumber() {
     this.currentQuestion = 0;
   }
+
+  resetTotalCorrectAnswers() {
+    this.totalCorrectAnswers = 0;
+  }
 }
 
 /**
@@ -135,6 +140,14 @@ function manageClickEvent(event) {
     case btnCloseInstructions:
     case instructionsContainer:
       hideElement(instructionsContainer);
+      break;
+    case btnQuizBack:
+      // Exit quiz, reset progress and return to main menu
+      hideElement(quizContainer);
+      currentQuiz.resetLives();
+      currentQuiz.resetQuestionNumber();
+      currentQuiz.resetTotalCorrectAnswers();
+      showElement(menuContainer);
       break;
   }
 }
