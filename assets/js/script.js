@@ -279,7 +279,6 @@ async function retrieveQuestions(categoryId) {
   const questionsPerRound = currentQuiz.questionsPerRound;
   let questionsUrl = "";
   allQuizQuestions = [];
-
   for (let i = 0; i <= numberOfRounds; i++) {
     if (customDifficultySelected == true) {
       // FIX: When specifying a customer number of questions this is specified
@@ -300,6 +299,19 @@ async function retrieveQuestions(categoryId) {
   }
 
   /**
+   * Convert character entity references to HTML symbols
+   * CREDIT: Adapted from stack overflow answer
+   * URL: https://stackoverflow.com/questions/784586/convert-special-characters-to-html-in-javascript
+   * @param {String} String containing character entity references
+   * @returns HTML formatted string e.g. "&amp;" -> converts to -> "&"
+   */
+  function convertToHtml(unformattedString) {
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = unformattedString;
+    return tempElement.innerText;
+  }
+
+  /**
   * Takes an Array of objects (question and answers) returned from the API
   * re-formats then before adding to a new array.
   * @param {Array} questions - Array of questions returned from the fetch
@@ -309,15 +321,19 @@ async function retrieveQuestions(categoryId) {
   function formatQuestions(questions) {
     let formattedQuestions = [];
     questions.forEach(element => {
+      // Answers returned from the API contain character entity references so
+      // these are converted to HTML special characters and them trimmed to
+      // ensure no extra whitespace
+      const correctAnswer = convertToHtml(element.correct_answer);
       let question = {};
       let answerArray = [];
       question.question = element.question;
       // Create array of answer choices
       answerArray = element.incorrect_answers;
-      answerArray.push(element.correct_answer);
+      answerArray.push(correctAnswer);
       // Assign answers to question object
       question.answers = answerArray;
-      question.correctAnswer = element.correct_answer;
+      question.correctAnswer = correctAnswer;
       // TODO: Shuffle array and check encoding
       formattedQuestions.push(question);
     });
