@@ -86,8 +86,8 @@ body {
   grid-row: btn-top / btn-bottom;
 }
 
-#menu-buttons-container > * {
-    flex: 1;
+#menu-buttons-container>* {
+  flex: 1;
 }
 
 /* Instructions */
@@ -168,8 +168,8 @@ body {
   /* Placeholder for later styles */
 }
 
-#time-remaining {
-  /* Placeholder for later styles */
+#current-difficulty {
+  text-transform: capitalize;
 }
 
 #lives-remaining {

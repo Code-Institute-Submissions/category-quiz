@@ -19,6 +19,7 @@ const questionsRemainingElement = document.getElementById('questions-remaining')
 const questionTextArea = document.getElementById('question-text');
 const btnAnswers = document.querySelectorAll('.btn-answer');
 const btnQuizBack = document.getElementById('btn-quiz-close');
+const currentDifficulty = document.getElementById('current-difficulty');
 const livesRemainingElement = document.getElementById('lives-remaining');
 
 // Define a class to contain game information
@@ -340,6 +341,7 @@ async function retrieveQuestions(categoryId) {
       question.answers = answerArray;
       question.correctAnswer = correctAnswer;
       // TODO: Shuffle array and check encoding
+      question.difficulty = element.difficulty;
       formattedQuestions.push(question);
     });
     return formattedQuestions;
@@ -367,7 +369,7 @@ function displayQuestion() {
   enableAnswerButtons();
   //Update the displayed statistics (updated question progress will be
   //displayed)
-  updateDisplayedStats();
+  updateDisplayInfo();
 }
 
 // --- Check Selected Answer ---
@@ -400,7 +402,7 @@ function checkAnswer(element) {
       currentQuiz.decrementLives();
       //Update the displayed statistics (updated lives remaining will be
       //displayed)
-      updateDisplayedStats();
+      updateDisplayInfo();
       // Incorrect answer so enable buttons while answer is checked
       enableAnswerButtons();
       // Check if quiz over due to no lives remaining;
@@ -417,7 +419,7 @@ function checkAnswer(element) {
   }
 }
 
-// --- Advance Quiz and Update Statistics ---
+// --- Advance Quiz and Update Displayed Information ---
 
 /**
  * Advances quiz, increments questionNumber, roundNumber and determines if game
@@ -450,15 +452,20 @@ function advanceQuiz() {
 /**
  * Update numbers of lives and question remaining
  */
-function updateDisplayedStats() {
+function updateDisplayInfo() {
   const livesRemaining = currentQuiz.livesRemaining;
   const numberOfRounds = currentQuiz.numberOfRounds + 1;
   const totalCorrectAnswers = currentQuiz.totalCorrectAnswers + 1;
   const totalQuestions = (currentQuiz.numberOfRounds + 1) * (currentQuiz.questionsPerRound + 1);
-  const currentQuestionNumber = numberOfRounds - (numberOfRounds - totalCorrectAnswers);
+  const currentQuestionNumberForDisplay = numberOfRounds - (numberOfRounds - totalCorrectAnswers);
+  const questions = currentQuiz.questions;
+  const roundNumber = currentQuiz.currentRound;
+  const questionNumber = currentQuiz.currentQuestion;
+  const currentDifficultyForDisplay = questions[roundNumber][questionNumber].difficulty;
 
+  currentDifficulty.innerHTML = currentDifficultyForDisplay;
   livesRemainingElement.innerHTML = livesRemaining;
-  questionsRemainingElement.innerHTML = `Question ${currentQuestionNumber} of ${totalQuestions}`;
+  questionsRemainingElement.innerHTML = `Question ${currentQuestionNumberForDisplay} of ${totalQuestions}`;
 }
 
 // --- Handle Quiz End ---
