@@ -309,7 +309,7 @@ async function retrieveQuestions(categoryId) {
   /**
    * Convert character entity references to HTML symbols
    * CREDIT: Adapted from stack overflow answer
-   * URL: https://stackoverflow.com/questions/784586/convert-special-characters-to-html-in-javascript
+   * URL: https://stackoverflow.com/a/784698
    * @param {String} String containing character entity references
    * @returns HTML formatted string e.g. "&amp;" -> converts to -> "&"
    */
@@ -318,6 +318,20 @@ async function retrieveQuestions(categoryId) {
     tempElement.innerHTML = unformattedString;
     return tempElement.innerText;
   }
+
+  /**
+   * Shuffle array using Durstenfeld shuffle (an optimized version of
+   * Fisher-Yates)
+   * CREDIT: From stack overflow answer
+   * URL: https://stackoverflow.com/a/12646864
+   * @param {*} array 
+   */
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
 
   /**
   * Takes an Array of objects (question and answers) returned from the API
@@ -339,6 +353,7 @@ async function retrieveQuestions(categoryId) {
       // Create array of answer choices
       answerArray = element.incorrect_answers;
       answerArray.push(correctAnswer);
+      shuffleArray(answerArray);
       // Assign answers to question object
       question.answers = answerArray;
       question.correctAnswer = correctAnswer;
