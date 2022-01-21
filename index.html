@@ -9,12 +9,12 @@
   <title>Category Quiz</title>
 </head>
 
-<body>
+<body class="flex flex-center">
   <section id="application-container">
 
     <div id="menu-container">
       <div id="logo-container">Logo</div>
-      <div id="menu-buttons-container">
+      <div id="menu-buttons-container" class="flex flex-column">
         <button id="btn-play" class="btn-menu">Play</button>
         <button id="btn-instructions" class="btn-menu">Instructions</button>
         <button id="btn-settings" class="btn-menu">Settings</button>
@@ -53,21 +53,21 @@
 
     <div id="category-select-container" class="hidden">
       <div id="heading">Please Select a Category</div>
-      <div id="categories-container">
+      <div id="categories-container" class="flex flex-column">
       </div>
     </div>
 
     <div id="quiz-container" class="hidden">
-      <div id="header">
+      <div id="header" class="flex">
         <button id="btn-quiz-close" class="btn-close">Back</button>
         <div id="current-difficulty">Difficulty</div>
         <div><i class="fas fa-heart"></i><span id="lives-remaining">Number of lives</span></div>
       </div>
-      <div id="question-container">
+      <div id="question-container" class="flex flex-column flex-center">
         <p id="questions-remaining">Questions remaining</p>
         <h2 id="question-text">Question</h2>
       </div>
-      <div id="answer-container">
+      <div id="answer-container" class="flex flex-column">
         <button class="btn-answer btn-game">A</button>
         <button class="btn-answer btn-game">B</button>
         <button class="btn-answer btn-game">C</button>

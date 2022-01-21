@@ -30,9 +30,6 @@ spacing consistent across browsers */
 }
 
 body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
   background-color: var(--body-background);
   font-family: 'Poppins', sans-serif;
@@ -79,8 +76,6 @@ body {
 }
 
 #menu-buttons-container {
-  display: flex;
-  flex-direction: column;
   gap: 10px;
   grid-column: centre;
   grid-row: btn-top / btn-bottom;
@@ -129,16 +124,12 @@ body {
 
 #heading {
   grid-row: header-top / header-bottom;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
   color: var(--white);
 }
 
 #categories-container {
   grid-row: categories-top / categories-bottom;
-  display: flex;
-  flex-direction: column;
   gap: 10px;
 }
 
@@ -153,7 +144,6 @@ body {
 }
 
 #header {
-  display: flex;
   grid-row: header-top / header-bottom;
   align-items: center;
   justify-content: space-between;
@@ -185,8 +175,6 @@ body {
 #answer-container {
   grid-column: full-width;
   grid-row: lower-top / lower-bottom;
-  display: flex;
-  flex-direction: column;
   gap: 5px;
 }
 
@@ -211,6 +199,19 @@ body {
 }
 
 /* Shared styles */
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-column {
+  flex-direction: column;
+}
 
 .hidden {
   display: none !important;
