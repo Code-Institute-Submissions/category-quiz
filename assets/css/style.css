@@ -4,6 +4,7 @@
 /* Set values used throughout the site as variables to allow for easy alteration */
 :root {
   --body-background: #219EBC;
+  --body-text-colour: #ffffff;
   --application-background: #034769;
   --correct-answer: #2A9D8F;
   --incorrect-answer: #D5573B;
@@ -33,6 +34,7 @@ body {
   height: 100vh;
   background-color: var(--body-background);
   font-family: 'Poppins', sans-serif;
+  color: var(--body-text-colour);
 }
 
 #application-container {
@@ -73,7 +75,9 @@ body {
   grid-row: logo-top / logo-bottom;
   min-height: 200px;
   background-color: var(--white);
+  color: #000000;
 }
+
 
 #menu-buttons-container {
   gap: 10px;
@@ -105,7 +109,6 @@ body {
   margin: 0 auto;
   padding: 10px;
   background-color: var(--body-background);
-  color: var(--white);
 }
 
 #btn-instructions-close {
@@ -125,7 +128,6 @@ body {
 #heading {
   grid-row: header-top / header-bottom;
   text-align: center;
-  color: var(--white);
 }
 
 #categories-container {
@@ -151,7 +153,6 @@ body {
 
 #header>* {
   display: inline;
-  color: var(--white);
 }
 
 #btn-quiz-close {
@@ -169,7 +170,6 @@ body {
 #question-container {
   grid-column: full-width;
   grid-row: upper-top / upper-bottom;
-  color: var(--white);
 }
 
 #answer-container {
@@ -190,7 +190,6 @@ body {
   transform: translate(-50%, -50%);
   margin: 0 auto;
   padding: 10px;
-  color: var(--white);
 }
 
 /* Padding to the left of the Font Awesome icon */
@@ -243,7 +242,7 @@ body {
   width: 40px;
   height: 40px;
   background-color: unset;
-  color: var(--white);
+  color: var(--body-text-colour);
 }
 
 .correct-answer {
