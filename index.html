@@ -30,7 +30,7 @@
 
     <div id="settings-container" class="background-container hidden">
       <div id="settings-content" class="background-content">
-        <button id="btn-settings-close" class="btn-close">X</button>
+        <button id="btn-settings-close" class="btn-close btn-close-modal">X</button>
         <h2>Settings</h2>
         <p>Set up your own quiz by selecting the difficulty and number of questions between 1 and 20 you would like.</p>
         <form action="">
@@ -50,11 +50,15 @@
 
     <div id="instructions-container" class="background-container hidden">
       <div id="instructions-content" class="background-content">
-        <button id="btn-instructions-close" class="btn-close">X</button>
+        <button id="btn-instructions-close" class="btn-close btn-close-modal">X</button>
         <h2>How to play</h2>
-        <p>The quiz consists of 3 rounds, with 3 questions in each round on your chosen topic.</p>
-        <p>You start the quiz with 3 lives, answer incorrectly and you loose a life but can continue to play.</p>
-        <p>If your lives are depleted and you guess incorrectly its game over, but you ca always try again!</p>
+        <ol>
+          <li>The default quiz consists of 9 questions.</li>
+          <li>The difficulty will increase after every 3 questions.</li>
+          <li>You start the quiz with 3 lives, answer incorrectly and you loose a life but can continue to answer.</li>
+          <li>If your lives are depleted or you answer all questions correctly its game over!</li>
+          <li>Have a look at the settings menu to configure a custom quiz!</li>
+        </ol>
       </div>
     </div>
 

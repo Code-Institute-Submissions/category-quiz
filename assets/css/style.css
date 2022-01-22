@@ -5,6 +5,7 @@
 :root {
   --body-background: #0d1321;
   --body-text-colour: #ffffff;
+  --body-text-alt-colour: #000000;
   --application-background: #748cab;
   --icon-colour: 218, 165, 32;
   --border-colour: 218, 165, 32;
@@ -45,6 +46,9 @@ body {
 h1 {
   font-size: 200%;
 }
+
+/* Application Container */
+
 #application-container {
   width: 100%;
   height: 100%;
@@ -71,7 +75,7 @@ h1 {
   cursor: pointer;
 }
 
-/* Menu container */
+/* Main Menu */
 
 #menu-container {
   display: grid;
@@ -116,30 +120,19 @@ h1 {
   flex: 1;
 }
 
-/* Instructions */
+/* Instructions and Settings Menu */
 
-.background-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+#instructions-content li {
+  padding-top: 15px;
+  list-style-position: inside;
+  line-height: 2em;
 }
 
-.background-content {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  margin: 0 auto;
-  padding: 10px;
-  background-color: var(--body-background);
-}
-
-#btn-instructions-close {
-  /* Placeholder for later styles */
+#instructions-container h2,
+#settings-container h2 {
+  text-align: center;
+  border-bottom: 1px solid var(--body-text-colour);
+  padding-bottom: 15px;
 }
 
 /* Category Selection */
@@ -181,7 +174,7 @@ h1 {
 #header {
   grid-column: full-width;
   grid-row: header-top / header-bottom;
-  align-items:flex-start;
+  align-items: flex-start;
   justify-content: space-between;
 }
 
@@ -224,6 +217,8 @@ h1 {
   grid-row: footer-top / footer-bottom;
 }
 
+/* Loading Message */
+
 #loading-container {
   position: fixed;
   top: 50%;
@@ -238,7 +233,7 @@ h1 {
   padding: 5px;
 }
 
-/* Shared styles */
+/* Shared Classes */
 
 .flex {
   display: flex;
@@ -293,6 +288,40 @@ h1 {
   height: 40px;
   background-color: unset;
   color: var(--body-text-colour);
+}
+
+.btn-close-modal {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.btn-close:hover,
+.btn-close:active {
+  background-color: var(--white);
+  color: var(--body-text-alt-colour);
+}
+
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.background-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: var(--application-background);
+  border-radius: 25px;
+  border: 5px solid rgb(var(--border-colour));
 }
 
 .correct-answer {
