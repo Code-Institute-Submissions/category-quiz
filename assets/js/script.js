@@ -14,16 +14,20 @@ const instructionsContainer = document.getElementById('instructions-container');
 const btnCloseInstructions = document.getElementById('btn-instructions-close');
 const categorySelectContainer = document.getElementById('category-select-container');
 const categoriesContainer = document.getElementById('categories-container');
+const btnCategoryClose = document.getElementById('btn-category-close');
 const quizContainer = document.getElementById('quiz-container');
 const questionsRemainingElement = document.getElementById('questions-remaining');
 const questionTextArea = document.getElementById('question-text');
 const btnAnswers = document.querySelectorAll('.btn-answer');
 const btnQuizBack = document.getElementById('btn-quiz-close');
 const currentDifficulty = document.getElementById('current-difficulty');
+const livesRemainingContainer = document.getElementById('lives-remaining-container');
 const livesRemainingElement = document.getElementById('lives-remaining');
 const quizEndContainer = document.getElementById('quiz-end-container');
 const quizEndStats = document.getElementById('quiz-end-stats');
 const loadingContainer = document.getElementById('loading-container');
+const btnPlayAgain = document.getElementById('btn-play-again');
+const btnReturnToMenu = document.getElementById('btn-main-menu');
 
 // Define a class to contain game information
 class Quiz {
@@ -60,16 +64,15 @@ class Quiz {
     }
   }
 
-  resetLives() {
+  resetQuizVariables() {
     this.livesRemaining = 3;
+    this.currentQuestion = 0;
+    this.totalCorrectAnswers = 0;
+    this.quizActive = true;
   }
 
   resetQuestionNumber() {
     this.currentQuestion = 0;
-  }
-
-  resetTotalCorrectAnswers() {
-    this.totalCorrectAnswers = 0;
   }
 }
 
@@ -81,6 +84,7 @@ class Quiz {
  */
 function applicationInitialization() {
   applicationContainer.addEventListener('click', manageClickEvent);
+  livesRemainingContainer.addEventListener('animationend', removeHighlightClass);
 }
 
 /**
@@ -129,15 +133,34 @@ function manageClickEvent(event) {
     case instructionsContainer:
       hideElement(instructionsContainer);
       break;
-    case btnQuizBack:
-      // Exit quiz, reset progress and return to main menu
-      hideElement(quizContainer);
-      currentQuiz.resetLives();
-      currentQuiz.resetQuestionNumber();
-      currentQuiz.resetTotalCorrectAnswers();
+    case btnCategoryClose:
+      hideElement(categorySelectContainer);
       showElement(menuContainer);
       break;
+    case btnQuizBack:
+    case btnReturnToMenu:
+      // Exit quiz, reset progress and return to main menu
+      hideElement(quizContainer);
+      hideElement(quizEndContainer);
+      currentQuiz.resetQuizVariables();
+      showElement(menuContainer);
+      break;
+    case btnPlayAgain:
+      hideElement(quizContainer);
+      hideElement(quizEndContainer);
+      currentQuiz.resetQuizVariables();
+      loadCategorySelect();
+      break;
   }
+}
+
+/**
+ * Single event handler for the end of an animation. Removes the class so it
+ * can be reapplied later.
+ * @param {*} event Event to be handled
+ */
+function removeHighlightClass(event) {
+  event.target.classList.remove('highlight-life-loss');
 }
 
 // --- API call --
@@ -272,7 +295,7 @@ function displayCategories(filteredCategoriesArray) {
     newCategoryButton = document.createElement('button');
     newCategoryButton.innerHTML = filteredCategoriesArray[i].name;
     newCategoryButton.setAttribute('data-id', filteredCategoriesArray[i].id);
-    newCategoryButton.classList.add('btn-category', 'btn-game');
+    newCategoryButton.classList.add('btn-category', 'btn-menu');
     categoriesContainer.appendChild(newCategoryButton);
   }
 }
@@ -308,11 +331,11 @@ async function retrieveQuestions(categoryId) {
   }
 
   /**
-   * Convert character entity references to HTML symbols
+   * Convert character entity references to symbols
    * CREDIT: Adapted from stack overflow answer
    * URL: https://stackoverflow.com/a/784698
    * @param {String} String containing character entity references
-   * @returns HTML formatted string e.g. "&amp;" -> converts to -> "&"
+   * @returns Converted string e.g. "&amp;" -> converts to -> "&"
    */
   function convertToHtml(unformattedString) {
     const tempElement = document.createElement('div');
@@ -329,10 +352,10 @@ async function retrieveQuestions(categoryId) {
    */
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
-}
+  }
 
   /**
   * Takes an Array of objects (question and answers) returned from the API
@@ -400,7 +423,7 @@ function checkAnswer(element) {
   const questions = currentQuiz.questions;
   const roundNumber = currentQuiz.currentRound;
   const questionNumber = currentQuiz.currentQuestion;
-  const selectedAnswer = element.innerHTML;
+  const selectedAnswer = element.innerText;
   const correctAnswer = questions[roundNumber][questionNumber].correctAnswer;
 
   setTimeout(element.classList.add('tentative-answer'));
@@ -416,6 +439,7 @@ function checkAnswer(element) {
   } else {
     setTimeout(() => {
       setTimeout(element.classList.replace('tentative-answer', 'incorrect-answer'), 1000);
+      livesRemainingContainer.classList.add('highlight-life-loss');
       currentQuiz.decrementLives();
       //Update the displayed statistics (updated lives remaining will be
       //displayed)
@@ -491,7 +515,7 @@ function updateDisplayInfo() {
  * DEBUG: Log the win condition to the console
  * @param {String} reason Win condition
  */
-function quizComplete(winCondition, answer="") {
+function quizComplete(winCondition, answer = "") {
   const totalCorrectAnswers = currentQuiz.totalCorrectAnswers;
   let htmlContent = "";
 
