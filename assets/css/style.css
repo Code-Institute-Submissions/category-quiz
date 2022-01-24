@@ -3,10 +3,10 @@
 
 /* Set values used throughout the site as variables to allow for easy alteration */
 :root {
-  --body-background: #0d1321;
+  --body-background: #141e35;
   --body-text-colour: #ffffff;
   --body-text-alt-colour: #000000;
-  --application-background: #748cab;
+  --application-background: #1f1f1f;
   --icon-colour: 218, 165, 32;
   --border-colour: 218, 165, 32;
   --correct-answer: #8ac926;
@@ -38,6 +38,8 @@ spacing consistent across browsers */
 body {
   height: 100vh;
   background-color: var(--body-background);
+  background-image: url(../images/background.jpg);
+  background-size: cover;
   font-family: 'Poppins', sans-serif;
   color: var(--body-text-colour);
 }
