@@ -32,19 +32,24 @@
       <div id="settings-content" class="background-content">
         <button id="btn-settings-close" class="btn-close btn-close-modal">X</button>
         <h2>Settings</h2>
-        <p>Set up your own quiz by selecting the difficulty and number of questions between 1 and 20 you would like.</p>
+        <p>Set up your own quiz by selecting the difficulty and number of
+          questions between 1 and 20 you would like.</p>
         <form action="">
-          <label for="custom-difficulty">Difficulty:</label>
+          <label for="custom-difficulty">Difficulty:</label><br>
           <select id="custom-difficulty" name="difficulty" required>
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
           </select>
-          <label for="custom-number-of-questions">Number of Questions</label>
+          <br>
+          <label for="custom-number-of-questions">Number of Questions</label><br>
           <input id="custom-number-of-questions" type="number" min="1" step="1" max="20" value="9">
+
+        </form>
+        <div class="btn-container flex flex-center">
           <button id="btn-settings-save" class="btn-menu" type="submit">Save</button>
           <button id="btn-settings-reset" class="btn-menu" type="submit">Reset</button>
-        </form>
+        </div>
       </div>
     </div>
 
@@ -98,8 +103,10 @@
       <div id="quiz-end-content" class="background-content">
         <p>Game Over!</p>
         <p id="quiz-end-stats"></p>
-        <button id="btn-play-again" class="btn-menu">Play again</button>
-        <button id="btn-main-menu" class="btn-menu">Menu</button>
+        <div class="btn-container flex flex-center">
+          <button id="btn-play-again" class="btn-menu">Play again</button>
+          <button id="btn-main-menu" class="btn-menu">Menu</button>
+        </div>
       </div>
     </div>
 
