@@ -272,7 +272,7 @@ function displayCategories(filteredCategoriesArray) {
     newCategoryButton = document.createElement('button');
     newCategoryButton.innerHTML = filteredCategoriesArray[i].name;
     newCategoryButton.setAttribute('data-id', filteredCategoriesArray[i].id);
-    newCategoryButton.classList.add('btn-category', 'btn-game');
+    newCategoryButton.classList.add('btn-category', 'btn-menu');
     categoriesContainer.appendChild(newCategoryButton);
   }
 }

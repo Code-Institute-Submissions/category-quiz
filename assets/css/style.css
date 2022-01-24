@@ -13,8 +13,7 @@
   --incorrect-answer: #ff595e;
   --btn-menu-colour: #FFFFFF;
   --btn-game-colour: #FFFFFF;
-  --tentative-answer: #ff7b00;
-  --white: #ffffff;
+  --tentative-answer: #daa520;
 }
 
 /* Configure universal box-sizing to make box model layout calculations easier */
@@ -50,10 +49,13 @@ h1 {
 /* Application Container */
 
 #application-container {
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   padding: 20px;
   background-color: var(--application-background);
+  border-radius: 40px;
+  border: 5px solid rgb(var(--border-colour));
+  overflow-y: scroll;
 
   /* Credit to w3schools for code to hide scrollbar but keep functionality:
   https://www.w3schools.com/howto/howto_css_hide_scrollbars.asp */
@@ -108,6 +110,10 @@ h1 {
   font-size: 500%;
   background: rgb(var(--icon-colour));
   transform: translateY(-8px) translateX(-8px);
+}
+
+.fa-lightbulb {
+  color: var(--body-text-colour);
 }
 
 #menu-buttons-container {
@@ -166,7 +172,7 @@ h1 {
 #quiz-container {
   display: grid;
   grid-template-columns: [full-width-start] 1fr [centre-start] 2fr [centre-end] 1fr [full-width-end];
-  grid-template-rows: [header-top] 1fr [header-bottom upper-top] 4fr [upper-bottom] 1fr [lower-top] 4fr [lower-bottom];
+  grid-template-rows: [header-top] 1fr [header-bottom] 1fr [upper-top] 4fr [upper-bottom] 1fr [lower-top] 4fr [lower-bottom];
   height: 100%;
   gap: 5px;
 }
@@ -187,7 +193,7 @@ h1 {
 }
 
 #lives-remaining-container {
-  border: 2px solid var(--white);
+  border: 2px solid var(--body-text-colour);
   padding: 5px 10px 5px 5px;
   border-radius: 15px;
 }
@@ -225,7 +231,7 @@ h1 {
   left: 50%;
   transform: translate(-50%, -50%);
   margin: 0 auto;
-  font-size: 500%;
+  font-size: 300%;
 }
 
 /* Padding to the left of the Font Awesome icon */
@@ -253,22 +259,24 @@ h1 {
 }
 
 .btn-menu {
-  min-width: 300px;
-  border: none;
+  border: 4px solid rgb(var(--border-colour));
+  min-width: 275px;
+  padding: 5px 0;
   border-radius: 10px;
   background-color: var(--btn-menu-colour);
-  font-size: 150%;
+  font-size: 125%;
   font-weight: 400;
   color: var(--application-background);
 }
 
 .btn-menu:hover,
 .btn-menu:active {
-  /* Placeholder for later styles */
+  background-color: rgb(var(--border-colour));
+  color: var(--body-text-colour);
 }
 
 .btn-game {
-  border: none;
+  border: 4px solid rgb(var(--border-colour));
   border-radius: 10px;
   background-color: var(--btn-game-colour);
   font-size: 150%;
@@ -276,13 +284,8 @@ h1 {
   color: var(--application-background);
 }
 
-.btn-game:hover,
-.btn-game:active {
-  /* Placeholder for later styles */
-}
-
 .btn-close {
-  border: 2px solid var(--white);
+  border: 2px solid var(--body-text-colour);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -298,7 +301,7 @@ h1 {
 
 .btn-close:hover,
 .btn-close:active {
-  background-color: var(--white);
+  background-color: var(--body-text-colour);
   color: var(--body-text-alt-colour);
 }
 
@@ -327,11 +330,13 @@ h1 {
 .correct-answer {
   background-color: var(--correct-answer);
   color: var(--body-text-colour);
+  border: 4px solid var(--body-text-colour);
 }
 
 .incorrect-answer {
   background-color: var(--incorrect-answer);
   color: var(--body-text-colour);
+  border: 4px solid var(--body-text-colour);
 }
 
 .tentative-answer {
@@ -346,13 +351,15 @@ h1 {
   #application-container {
     width: 800px;
     height: 80%;
-    border-radius: 40px;
     padding: 40px;
-    border: 5px solid rgb(var(--border-colour));
   }
 
-  .background-content {
-    width: 700px;
+  #logo-container h1 {
+    font-size: 400%;
+  }
+
+  #loading-container {
+    font-size: 500%;
   }
 
   #categories-container {
@@ -361,5 +368,13 @@ h1 {
 
   #answer-container {
     grid-column: centre;
+  }
+
+  .btn-menu {
+    font-size: 150%;
+  }
+
+  .background-content {
+    width: 700px;
   }
 }

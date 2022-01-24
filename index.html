@@ -16,7 +16,7 @@
       <div id="logo-container" class="flex flex-column flex-center">
         <div class="logo-bottom">
           <div class="logo-top flex flex-center">
-            ?
+            <i class="far fa-lightbulb"></i>
           </div>
         </div>
         <h1>Category Quiz</h1>
@@ -73,14 +73,16 @@
     <div id="quiz-container" class="hidden">
       <div id="header" class="flex">
         <button id="btn-quiz-close" class="btn-close">X</button>
-        <div id="current-difficulty">Difficulty</div>
+        <div id="quiz-heder-text-information" class="flex flex-column flex-center">
+          <p id="questions-remaining">Questions remaining</p>
+          <div id="current-difficulty">Difficulty</div>
+        </div>
         <div id="lives-remaining-container">
           <i class="fas fa-heart"></i>
           <span id="lives-remaining">0</span>
         </div>
       </div>
       <div id="question-container" class="flex flex-column flex-center">
-        <p id="questions-remaining">Questions remaining</p>
         <h2 id="question-text">Question</h2>
       </div>
       <div id="answer-container" class="flex flex-column">
