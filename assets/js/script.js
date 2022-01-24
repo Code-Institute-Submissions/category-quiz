@@ -21,6 +21,7 @@ const questionTextArea = document.getElementById('question-text');
 const btnAnswers = document.querySelectorAll('.btn-answer');
 const btnQuizBack = document.getElementById('btn-quiz-close');
 const currentDifficulty = document.getElementById('current-difficulty');
+const livesRemainingContainer = document.getElementById('lives-remaining-container');
 const livesRemainingElement = document.getElementById('lives-remaining');
 const quizEndContainer = document.getElementById('quiz-end-container');
 const quizEndStats = document.getElementById('quiz-end-stats');
@@ -83,6 +84,7 @@ class Quiz {
  */
 function applicationInitialization() {
   applicationContainer.addEventListener('click', manageClickEvent);
+  livesRemainingContainer.addEventListener('animationend', removeHighlightClass);
 }
 
 /**
@@ -150,6 +152,15 @@ function manageClickEvent(event) {
       loadCategorySelect();
       break;
   }
+}
+
+/**
+ * Single event handler for the end of an animation. Removes the class so it
+ * can be reapplied later.
+ * @param {*} event Event to be handled
+ */
+function removeHighlightClass(event) {
+  event.target.classList.remove('highlight-life-loss');
 }
 
 // --- API call --
@@ -428,6 +439,7 @@ function checkAnswer(element) {
   } else {
     setTimeout(() => {
       setTimeout(element.classList.replace('tentative-answer', 'incorrect-answer'), 1000);
+      livesRemainingContainer.classList.add('highlight-life-loss');
       currentQuiz.decrementLives();
       //Update the displayed statistics (updated lives remaining will be
       //displayed)

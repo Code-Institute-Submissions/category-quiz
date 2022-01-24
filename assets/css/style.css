@@ -223,6 +223,10 @@ h1 {
   grid-row: footer-top / footer-bottom;
 }
 
+.highlight-life-loss {
+  animation: highlight 0.5s linear forwards;
+}
+
 /* Loading Message */
 
 #loading-container {
@@ -342,6 +346,33 @@ h1 {
 .tentative-answer {
   background-color: var(--tentative-answer);
   color: var(--body-text-colour);
+}
+
+/* Animation */
+
+@keyframes highlight {
+  0% {
+    background-color: unset;
+
+  }
+
+  10% {
+    background-color: var(--incorrect-answer);
+    transform: rotate(15deg) scale(1.5)
+  }
+
+  50% {
+    transform: rotate(-15deg)
+  }
+
+  90% {
+    background-color: var(--incorrect-answer);
+    transform: rotate(15deg)
+  }
+
+  100% {
+    background-color: unset;
+  }
 }
 
 /* Media queries */
