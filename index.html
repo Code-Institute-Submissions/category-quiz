@@ -42,8 +42,8 @@
           </select>
           <label for="custom-number-of-questions">Number of Questions</label>
           <input id="custom-number-of-questions" type="number" min="1" step="1" max="20" value="9">
-          <button id="btn-settings-save" type="submit">Save</button>
-          <button id="btn-settings-reset" type="submit">Reset</button>
+          <button id="btn-settings-save" class="btn-menu" type="submit">Save</button>
+          <button id="btn-settings-reset" class="btn-menu" type="submit">Reset</button>
         </form>
       </div>
     </div>
@@ -63,6 +63,7 @@
     </div>
 
     <div id="category-select-container" class="hidden">
+      <button id="btn-category-close" class="btn-close">X</button>
       <div id="heading">
         <h1>Please Select a Category</h1>
       </div>
@@ -97,8 +98,8 @@
       <div id="quiz-end-content" class="background-content">
         <p>Game Over!</p>
         <p id="quiz-end-stats"></p>
-        <button>Play again</button>
-        <button>Menu</button>
+        <button id="btn-play-again" class="btn-menu">Play again</button>
+        <button id="btn-main-menu" class="btn-menu">Menu</button>
       </div>
     </div>
 

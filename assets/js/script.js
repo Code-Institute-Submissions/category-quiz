@@ -14,6 +14,7 @@ const instructionsContainer = document.getElementById('instructions-container');
 const btnCloseInstructions = document.getElementById('btn-instructions-close');
 const categorySelectContainer = document.getElementById('category-select-container');
 const categoriesContainer = document.getElementById('categories-container');
+const btnCategoryClose = document.getElementById('btn-category-close');
 const quizContainer = document.getElementById('quiz-container');
 const questionsRemainingElement = document.getElementById('questions-remaining');
 const questionTextArea = document.getElementById('question-text');
@@ -24,6 +25,8 @@ const livesRemainingElement = document.getElementById('lives-remaining');
 const quizEndContainer = document.getElementById('quiz-end-container');
 const quizEndStats = document.getElementById('quiz-end-stats');
 const loadingContainer = document.getElementById('loading-container');
+const btnPlayAgain = document.getElementById('btn-play-again');
+const btnReturnToMenu = document.getElementById('btn-main-menu');
 
 // Define a class to contain game information
 class Quiz {
@@ -60,16 +63,15 @@ class Quiz {
     }
   }
 
-  resetLives() {
+  resetQuizVariables() {
     this.livesRemaining = 3;
+    this.currentQuestion = 0;
+    this.totalCorrectAnswers = 0;
+    this.quizActive = true;
   }
 
   resetQuestionNumber() {
     this.currentQuestion = 0;
-  }
-
-  resetTotalCorrectAnswers() {
-    this.totalCorrectAnswers = 0;
   }
 }
 
@@ -129,13 +131,23 @@ function manageClickEvent(event) {
     case instructionsContainer:
       hideElement(instructionsContainer);
       break;
+    case btnCategoryClose:
+      hideElement(categorySelectContainer);
+      showElement(menuContainer);
+      break;
     case btnQuizBack:
+    case btnReturnToMenu:
       // Exit quiz, reset progress and return to main menu
       hideElement(quizContainer);
-      currentQuiz.resetLives();
-      currentQuiz.resetQuestionNumber();
-      currentQuiz.resetTotalCorrectAnswers();
+      hideElement(quizEndContainer);
+      currentQuiz.resetQuizVariables();
       showElement(menuContainer);
+      break;
+    case btnPlayAgain:
+      hideElement(quizContainer);
+      hideElement(quizEndContainer);
+      currentQuiz.resetQuizVariables();
+      loadCategorySelect();
       break;
   }
 }
@@ -329,10 +341,10 @@ async function retrieveQuestions(categoryId) {
    */
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
-}
+  }
 
   /**
   * Takes an Array of objects (question and answers) returned from the API
@@ -491,7 +503,7 @@ function updateDisplayInfo() {
  * DEBUG: Log the win condition to the console
  * @param {String} reason Win condition
  */
-function quizComplete(winCondition, answer="") {
+function quizComplete(winCondition, answer = "") {
   const totalCorrectAnswers = currentQuiz.totalCorrectAnswers;
   let htmlContent = "";
 
