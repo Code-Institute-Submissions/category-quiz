@@ -331,11 +331,11 @@ async function retrieveQuestions(categoryId) {
   }
 
   /**
-   * Convert character entity references to HTML symbols
+   * Convert character entity references to symbols
    * CREDIT: Adapted from stack overflow answer
    * URL: https://stackoverflow.com/a/784698
    * @param {String} String containing character entity references
-   * @returns HTML formatted string e.g. "&amp;" -> converts to -> "&"
+   * @returns Converted string e.g. "&amp;" -> converts to -> "&"
    */
   function convertToHtml(unformattedString) {
     const tempElement = document.createElement('div');
@@ -423,7 +423,7 @@ function checkAnswer(element) {
   const questions = currentQuiz.questions;
   const roundNumber = currentQuiz.currentRound;
   const questionNumber = currentQuiz.currentQuestion;
-  const selectedAnswer = element.innerHTML;
+  const selectedAnswer = element.innerText;
   const correctAnswer = questions[roundNumber][questionNumber].correctAnswer;
 
   setTimeout(element.classList.add('tentative-answer'));
