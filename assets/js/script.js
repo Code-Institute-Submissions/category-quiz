@@ -173,7 +173,11 @@ function removeHighlightClass(event) {
 async function getData(endpoint) {
   const response = await fetch(endpoint);
   const data = await response.json();
-  return data;
+  if (data.response_code == 1) {
+    throw new TypeError("Unexpected response from API");
+  } else {
+    return data;
+  }
 }
 
 // --- DOM Manipulation ---
@@ -301,6 +305,26 @@ function displayCategories(filteredCategoriesArray) {
 }
 
 // --- Get and Display Questions ---
+
+/**
+ * Retrieves the number of quiz questions available in the API for a specified
+ * category and compares it with the custom number of questions specified.
+ * @param {Int} categoryId Number used to identify the category selected.
+ * @returns 
+ */
+async function numQuestionsAvailable(categoryId) {
+  const customDifficultyLevel = currentQuiz.customDifficultyLevel;
+  const questionsPerRound = currentQuiz.questionsPerRound;
+  try {
+    let data = await getData(`https://opentdb.com/api_count.php?category=${categoryId}`);
+    let arrayOfKeys = Object.keys(data.category_question_count);
+    const index = (element) => element.includes(customDifficultyLevel);
+    let indexOfDifficulty = arrayOfKeys.find(index);
+    return [questionsPerRound <= data.category_question_count[indexOfDifficulty], data.category_question_count[indexOfDifficulty]];
+  } catch (e) {
+    errorHandler(e);
+  }
+}
 
 /**
  * Retrieve and format quiz questions
@@ -551,7 +575,7 @@ async function loadCategorySelect() {
     hideElement(loadingContainer);
     showElement(categorySelectContainer);
   } catch (e) {
-    console.log(e);
+    errorHandler(e);
   }
 }
 
@@ -563,16 +587,59 @@ async function loadCategorySelect() {
 async function loadQuiz(categoryId) {
   hideElement(categorySelectContainer);
   showElement(loadingContainer);
-  try {
-    const questions = await retrieveQuestions(categoryId);
-    // Add the question to the currentQuiz Object
-    currentQuiz.questions = questions;
-    displayQuestion();
-    hideElement(loadingContainer);
-    showElement(quizContainer);
-  } catch (e) {
-    console.log(e);
+
+  let proceed = true;
+  let numOfQuestionsAvailable = 0;
+
+  if (currentQuiz.customDifficultySelected) {
+    results = await numQuestionsAvailable(categoryId);
+    proceed = results[0];
+    numOfQuestionsAvailable = results[1];
   }
+
+  if (!proceed) {
+    alert("Sorry, I know you asked for " +
+      (currentQuiz.questionsPerRound + 1) + " " + currentQuiz.customDifficultyLevel +
+      " questions, but there are only " +
+      numOfQuestionsAvailable +
+      " available in the category you selected.");
+    hideElement(loadingContainer);
+    showElement(menuContainer);
+    showElement(settingsContainer);
+  } else {
+    try {
+      const questions = await retrieveQuestions(categoryId);
+      // Add the question to the currentQuiz Object
+      currentQuiz.questions = questions;
+      displayQuestion();
+      hideElement(loadingContainer);
+      showElement(quizContainer);
+    } catch (e) {
+      errorHandler(e);
+    }
+  }
+}
+
+// --- Error Handler ---
+
+/**
+ * Error handler - Display's the error to the user and returns to the main menu
+ * @param {Object} e Error 
+ */
+function errorHandler(e) {
+  if (e instanceof TypeError) {
+    if (e.message.includes("Network")) {
+      console.log("Alerted user to error:\n", e, "\nReturning to main menu");
+      alert("Unexpected Error: Unable to reach API (https://opentdb.com).\n\nPlease check network connection.");
+    } else if (e.message.includes("Unexpected response from API")) {
+      console.log("Alerted user to error.\n\nReturning to main menu");
+      alert("Unexpected Error: Unexpected response from API.");
+    }
+  } else {
+    alert("Application has encountered an error:\n" + e);
+  }
+  hideElement(loadingContainer);
+  showElement(menuContainer);
 }
 
 // Add event listeners for buttons
