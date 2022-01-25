@@ -89,9 +89,10 @@ function applicationInitialization() {
 }
 
 /**
- * Handles click events - Adapted from https://github.com/lukebinmore/2048
- * https://github.com/lukebinmore/2048/blob/ab3fb81ca162d5bd8e282daeeb44439508e5e2b8/assets/js/index.js#L55-L88
- * @param {*} event Event to be handled
+ * Handles click events
+ * CREDIT: Adapted from https://github.com/lukebinmore/2048
+ * URL: https://github.com/lukebinmore/2048/blob/ab3fb81ca162d5bd8e282daeeb44439508e5e2b8/assets/js/index.js#L55-L88
+ * @param {*} event - Event to be handled
  */
 function manageClickEvent(event) {
   // Handle click events for reusable buttons with no id retrieved with
@@ -231,7 +232,6 @@ function saveSettings(event) {
   currentQuiz.numberOfRounds = 0;
   currentQuiz.customDifficultyLevel = customDifficulty.value;
   currentQuiz.questionsPerRound = parseInt(customNumberOfQuestions.value) - 1;
-  // TODO: Button class to highlight change made
   btnSaveSettings.innerHTML = "Saved!";
   setTimeout(() => {
     btnSaveSettings.innerHTML = "Save";
@@ -246,7 +246,6 @@ function saveSettings(event) {
 function resetSettings(event) {
   event.preventDefault();
   window.currentQuiz = new Quiz();
-  // TODO: Button class to highlight change made
   btnResetSettings.innerHTML = "Reset!";
   setTimeout(() => {
     btnResetSettings.innerHTML = "Reset";
@@ -406,7 +405,6 @@ async function retrieveQuestions(categoryId) {
       // Assign answers to question object
       question.answers = answerArray;
       question.correctAnswer = correctAnswer;
-      // TODO: Shuffle array and check encoding
       question.difficulty = element.difficulty;
       formattedQuestions.push(question);
     });
@@ -424,8 +422,6 @@ function displayQuestion() {
   const questions = currentQuiz.questions;
   const roundNumber = currentQuiz.currentRound;
   const questionNumber = currentQuiz.currentQuestion;
-  console.log(`Current round number = ${roundNumber}, Current question number = ${questionNumber}`); // DEBUG
-  console.log(`Correct Answer = ${questions[roundNumber][questionNumber].correctAnswer}`); // DEBUG
   questionTextArea.innerHTML = questions[roundNumber][questionNumber].question;
   for (let i = 0; i < btnAnswers.length; i++) {
     btnAnswers[i].innerHTML = questions[roundNumber][questionNumber].answers[i];
@@ -479,7 +475,7 @@ function checkAnswer(element) {
         let btnAnswersArray = Array.from(btnAnswers);
         let correctAnswerButton = btnAnswersArray.find(element => element.innerHTML == correctAnswer);
         correctAnswerButton.classList.add('correct-answer');
-        quizComplete(0, correctAnswer); // No Lives Remaining
+        quizComplete(0); // No Lives Remaining
       }
     }, 1000);
   }
@@ -510,7 +506,7 @@ function advanceQuiz() {
       setTimeout(displayQuestion, 1000);
     } else {
       // This is the last question of the last round so the quiz is over
-      quizComplete(1, ""); // Win
+      quizComplete(1); // Win
     }
   }
 }
@@ -537,10 +533,11 @@ function updateDisplayInfo() {
 // --- Handle Quiz End ---
 
 /**
- * DEBUG: Log the win condition to the console
- * @param {String} reason Win condition
+ * Handle the end of the quiz and display stats and options to proceed
+ * @param {Int} winCondition Number representing win condition (0 = No lives
+ * remaining, 1 = Quiz Complete)
  */
-function quizComplete(winCondition, answer = "") {
+function quizComplete(winCondition) {
   const totalCorrectAnswers = currentQuiz.totalCorrectAnswers;
   let htmlContent = "";
 
