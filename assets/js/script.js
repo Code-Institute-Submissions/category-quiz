@@ -67,6 +67,7 @@ class Quiz {
   resetQuizVariables() {
     this.livesRemaining = 3;
     this.currentQuestion = 0;
+    this.currentRound = 0;
     this.totalCorrectAnswers = 0;
     this.quizActive = true;
   }
