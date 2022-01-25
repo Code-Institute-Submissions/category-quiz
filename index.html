@@ -5,15 +5,16 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Category Quiz is a fun way to test your knowledge on a range of topics!" />
+  <meta name="keywords" content="category quiz, quiz, custom quiz, game, fun" />
   <link rel="stylesheet" href="assets/css/style.css">
   <title>Category Quiz</title>
 </head>
 
 <body class="flex flex-center">
-  <section id="application-container">
-
+  <main id="application-container">
     <div id="menu-container">
-      <div id="logo-container" class="flex flex-column flex-center">
+      <div id="logo-container" class="flex flex-column flex-center" aria-hidden="true">
         <div class="logo-bottom">
           <div class="logo-top flex flex-center">
             <i class="far fa-lightbulb"></i>
@@ -27,16 +28,15 @@
         <button id="btn-settings" class="btn-menu">Settings</button>
       </div>
     </div>
-
     <div id="settings-container" class="background-container hidden">
       <div id="settings-content" class="background-content">
         <button id="btn-settings-close" class="btn-close btn-close-modal">X</button>
         <h2>Settings</h2>
         <p>Set up your own quiz by selecting the difficulty and number of
           questions between 1 and 20 you would like.</p>
-        <form action="">
+        <form action="post">
           <label for="custom-difficulty">Difficulty:</label><br>
-          <select id="custom-difficulty" name="difficulty" required>
+          <select id="custom-difficulty" name="difficulty">
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
@@ -44,7 +44,6 @@
           <br>
           <label for="custom-number-of-questions">Number of Questions</label><br>
           <input id="custom-number-of-questions" type="number" min="1" step="1" max="20" value="9">
-
         </form>
         <div class="btn-container flex flex-center">
           <button id="btn-settings-save" class="btn-menu" type="submit">Save</button>
@@ -52,7 +51,6 @@
         </div>
       </div>
     </div>
-
     <div id="instructions-container" class="background-container hidden">
       <div id="instructions-content" class="background-content">
         <button id="btn-instructions-close" class="btn-close btn-close-modal">X</button>
@@ -66,7 +64,6 @@
         </ol>
       </div>
     </div>
-
     <div id="category-select-container" class="hidden">
       <button id="btn-category-close" class="btn-close">X</button>
       <div id="heading">
@@ -75,7 +72,6 @@
       <div id="categories-container" class="flex flex-column">
       </div>
     </div>
-
     <div id="quiz-container" class="hidden">
       <div id="header" class="flex">
         <button id="btn-quiz-close" class="btn-close">X</button>
@@ -98,7 +94,6 @@
         <button class="btn-answer btn-game">D</button>
       </div>
     </div>
-
     <div id="quiz-end-container" class="background-container hidden">
       <div id="quiz-end-content" class="background-content">
         <p>Game Over!</p>
@@ -109,15 +104,11 @@
         </div>
       </div>
     </div>
-
     <div id="loading-container" class="hidden">
       Loading...
     </div>
-
-  </section>
-
+  </main>
   <script src="assets/js/script.js"></script>
-
   <!-- Font Awesome Script -->
   <script src="https://kit.fontawesome.com/1b0e724256.js" crossorigin="anonymous"></script>
 </body>
