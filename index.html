@@ -7,12 +7,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Category Quiz is a fun way to test your knowledge on a range of topics!" />
   <meta name="keywords" content="category quiz, quiz, custom quiz, game, fun" />
+  <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="assets/css/style.css">
   <title>Category Quiz</title>
 </head>
 
 <body class="flex flex-center">
+  <!-- Application container element contains all elements of the quiz -->
   <main id="application-container">
+    <!-- Menu container element contains the quiz logo and buttons to start the
+    quiz and view the instructions and settings modals -->
     <div id="menu-container">
       <div id="logo-container" class="flex flex-column flex-center" aria-hidden="true">
         <div class="logo-bottom">
@@ -22,12 +26,14 @@
         </div>
         <h1>Category Quiz</h1>
       </div>
-      <div id="menu-buttons-container" class="flex flex-column">
+      <div id="menu-buttons-container" class="flex flex-column last-child-margin">
         <button id="btn-play" class="btn-menu">Play</button>
         <button id="btn-instructions" class="btn-menu">Instructions</button>
         <button id="btn-settings" class="btn-menu">Settings</button>
       </div>
     </div>
+    <!-- Settings container element contains the elements used to when creating a custom
+    quiz -->
     <div id="settings-container" class="background-container hidden">
       <div id="settings-content" class="background-content">
         <button id="btn-settings-close" class="btn-close btn-close-modal">X</button>
@@ -51,28 +57,38 @@
         </div>
       </div>
     </div>
+    <!-- Instructions container element details the default quiz settings and
+    the number of lives a user has -->
     <div id="instructions-container" class="background-container hidden">
       <div id="instructions-content" class="background-content">
         <button id="btn-instructions-close" class="btn-close btn-close-modal">X</button>
         <h2>How to play</h2>
         <ol>
           <li>The default quiz consists of 9 questions.</li>
-          <li>The difficulty will increase after every 3 questions.</li>
+          <li>The question difficulty will increase after every 3 questions.</li>
           <li>You start the quiz with 3 lives, answer incorrectly and you loose a life but can continue to answer.</li>
           <li>If your lives are depleted or you answer all questions correctly its game over!</li>
           <li>Have a look at the settings menu to configure a custom quiz!</li>
         </ol>
       </div>
     </div>
+    <!-- Category Select container element is used when displaying the category
+    selection buttons using information retrieved from the OpenTBD API -->
     <div id="category-select-container" class="hidden">
       <button id="btn-category-close" class="btn-close">X</button>
       <div id="heading">
         <h1>Please Select a Category</h1>
       </div>
-      <div id="categories-container" class="flex flex-column">
+      <!-- Category buttons are appended to the categories container
+      using Javascript -->
+      <div id="categories-container" class="flex flex-column last-child-margin">
       </div>
     </div>
+    <!-- Quiz container element contains all the elements populated by
+    Javascript using information retrieved from the OpenTBD API  -->
     <div id="quiz-container" class="hidden">
+      <!-- Header element containing progress information and the number of
+      lives remaining -->
       <div id="header" class="flex">
         <button id="btn-quiz-close" class="btn-close">X</button>
         <div id="quiz-heder-text-information" class="flex flex-column flex-center">
@@ -84,16 +100,22 @@
           <span id="lives-remaining">0</span>
         </div>
       </div>
+      <!-- Question display container populated by Javascript using information
+    retrieved from the OpenTBD API -->
       <div id="question-container" class="flex flex-column flex-center">
         <h2 id="question-text">Question</h2>
       </div>
-      <div id="answer-container" class="flex flex-column">
+      <!-- Answer buttons display container populated by Javascript using
+    information retrieved from the OpenTBD API -->
+      <div id="answer-container" class="flex flex-column last-child-margin">
         <button class="btn-answer btn-game">A</button>
         <button class="btn-answer btn-game">B</button>
         <button class="btn-answer btn-game">C</button>
         <button class="btn-answer btn-game">D</button>
       </div>
     </div>
+    <!-- Container used to display why the quiz ended and feedback how many
+    questions were answered correctly -->
     <div id="quiz-end-container" class="background-container hidden">
       <div id="quiz-end-content" class="background-content">
         <p>Game Over!</p>
@@ -104,11 +126,15 @@
         </div>
       </div>
     </div>
+    <!-- Displayed when data is being fetched from the API -->
     <div id="loading-container" class="hidden">
       Loading...
     </div>
   </main>
+
+  <!-- Quiz/Game Script -->
   <script src="assets/js/script.js"></script>
+
   <!-- Font Awesome Script -->
   <script src="https://kit.fontawesome.com/1b0e724256.js" crossorigin="anonymous"></script>
 </body>
