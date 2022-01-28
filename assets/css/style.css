@@ -96,6 +96,7 @@ h1 {
   min-height: 200px;
   font-family: 'Varela Round', sans-serif;
   user-select: none;
+  padding-bottom: 50px;
 }
 
 .logo-bottom {
@@ -192,10 +193,6 @@ h1 {
   flex: 1;
 }
 
-#categories-container :last-child {
-  margin-bottom: 20px;
-}
-
 /* Quiz */
 
 #quiz-container {
@@ -211,10 +208,6 @@ h1 {
   grid-row: header-top / header-bottom;
   align-items: flex-start;
   justify-content: space-between;
-}
-
-#btn-quiz-close {
-  /* Placeholder for later styles */
 }
 
 #current-difficulty {
@@ -281,6 +274,8 @@ h1 {
 
 /* Shared Classes */
 
+
+/* Flex Positioning */
 .flex {
   display: flex;
 }
@@ -294,9 +289,16 @@ h1 {
   flex-direction: column;
 }
 
+/* Used to Hide Sections */
 .hidden {
   display: none !important;
 }
+
+.last-child-margin :last-child {
+  margin-bottom: 20px;
+}
+
+/* Menu Buttons */
 
 .btn-menu {
   border: 4px solid rgb(var(--border-colour));
@@ -315,6 +317,8 @@ h1 {
   color: var(--body-text-colour);
 }
 
+/* Game Buttons */
+
 .btn-game {
   border: 4px solid rgb(var(--border-colour));
   border-radius: 10px;
@@ -323,6 +327,8 @@ h1 {
   font-weight: 400;
   color: var(--application-background);
 }
+
+/*  Close/Quit Buttons */
 
 .btn-close {
   border: 2px solid var(--body-text-colour);
@@ -333,6 +339,7 @@ h1 {
   color: var(--body-text-colour);
 }
 
+/* Addition of this class positions the button in a modal element */
 .btn-close-modal {
   position: absolute;
   top: 10px;
@@ -344,6 +351,8 @@ h1 {
   background-color: var(--body-text-colour);
   color: var(--body-text-alt-colour);
 }
+
+/* Model content containers */
 
 .background-container {
   position: fixed;
@@ -367,6 +376,8 @@ h1 {
   border: 5px solid rgb(var(--border-colour));
 }
 
+/* Answer button styling */
+
 .correct-answer {
   background-color: var(--correct-answer);
   color: var(--body-text-colour);
@@ -384,14 +395,9 @@ h1 {
   color: var(--body-text-colour);
 }
 
-/* Animation */
+/* Animation for use when a life is lost */
 
 @keyframes highlight {
-  0% {
-    background-color: unset;
-
-  }
-
   10% {
     background-color: var(--incorrect-answer);
     transform: rotate(15deg) scale(1.5)
@@ -404,10 +410,6 @@ h1 {
   90% {
     background-color: var(--incorrect-answer);
     transform: rotate(15deg)
-  }
-
-  100% {
-    background-color: unset;
   }
 }
 

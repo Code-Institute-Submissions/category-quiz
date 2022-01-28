@@ -29,63 +29,63 @@ const loadingContainer = document.getElementById('loading-container');
 const btnPlayAgain = document.getElementById('btn-play-again');
 const btnReturnToMenu = document.getElementById('btn-main-menu');
 
-// Define a class to contain game information
+// Define a class to contain quiz information
 class Quiz {
   constructor() {
     // Initialize default quiz variables
-    this.numberOfRounds = 2;
+    this.numOfRounds = 2;
     this.questionsPerRound = 2;
-    this.currentRound = 0;
-    this.currentQuestion = 0;
-    this.livesRemaining = 3;
+    this.currentRoundNum = 0;
+    this.currentQuestionNum = 0;
+    this.numOfLivesRemaining = 3;
     this.customDifficultyLevel = "";
     this.customDifficultySelected = false;
     this.quizActive = true;
-    // Player progress tracking
-    this.totalCorrectAnswers = 0;
+    // Variable to track the number of questions answered correctly
+    this.totalNumCorrectAnswers = 0;
   }
 
   incrementRound() {
-    this.currentRound++;
+    this.currentRoundNum++;
   }
 
   incrementQuestion() {
-    this.currentQuestion++;
+    this.currentQuestionNum++;
   }
 
-  incrementTotalCorrectAnswers() {
-    this.totalCorrectAnswers++;
+  incrementTotalNumCorrectAnswers() {
+    this.totalNumCorrectAnswers++;
   }
 
   decrementLives() {
-    this.livesRemaining--;
-    if (this.livesRemaining === 0) {
+    this.numOfLivesRemaining--;
+    if (this.numOfLivesRemaining === 0) {
       this.quizActive = false;
     }
   }
 
   resetQuizVariables() {
-    this.livesRemaining = 3;
-    this.currentQuestion = 0;
-    this.currentRound = 0;
-    this.totalCorrectAnswers = 0;
+    this.numOfLivesRemaining = 3;
+    this.currentQuestionNum = 0;
+    this.currentRoundNum = 0;
+    this.totalNumCorrectAnswers = 0;
     this.quizActive = true;
   }
 
-  resetQuestionNumber() {
-    this.currentQuestion = 0;
+  resetQuestionNum() {
+    this.currentQuestionNum = 0;
   }
 }
 
-// --- Event listener and handler ---
+// --- Event listeners and handlers ---
 
 /**
- * Attach event listener to the 'application-container' element and create a new
- * Game class in the global scope
+ * Add event listeners for buttons and the end of the animation used when a life
+ * is lost
  */
 function applicationInitialization() {
-  applicationContainer.addEventListener('click', manageClickEvent);
-  livesRemainingContainer.addEventListener('animationend', removeHighlightClass);
+  applicationContainer.addEventListener('click', handleUserAction);
+  livesRemainingContainer.addEventListener('animationend', removeAnimationClass);
 }
 
 /**
@@ -94,19 +94,19 @@ function applicationInitialization() {
  * URL: https://github.com/lukebinmore/2048/blob/ab3fb81ca162d5bd8e282daeeb44439508e5e2b8/assets/js/index.js#L55-L88
  * @param {*} event - Event to be handled
  */
-function manageClickEvent(event) {
+function handleUserAction(event) {
   // Handle click events for reusable buttons with no id retrieved with
   // querySelectorAll
 
   // Category buttons
   if (event.target.matches('.btn-category')) {
-    loadQuiz(event.target.getAttribute('data-id'));
+    populateAndDisplayQuiz(event.target.getAttribute('data-id'));
   }
 
   // Quiz answer buttons
   if (event.target.matches('.btn-answer')) {
     if (event.target.matches('.btn-answer')) {
-      checkAnswer(event.target);
+      checkSelectedAnswer(event.target);
     }
   }
 
@@ -114,7 +114,7 @@ function manageClickEvent(event) {
   // getElementById
   switch (event.target) {
     case btnPlayQuiz:
-      loadCategorySelect();
+      populateAndDisplayCategorySelection();
       break;
     case btnOpenSettings:
       showElement(settingsContainer);
@@ -123,10 +123,10 @@ function manageClickEvent(event) {
       hideElement(settingsContainer);
       break;
     case btnSaveSettings:
-      saveSettings(event);
+      setCustomQuizVariables(event);
       break;
     case btnResetSettings:
-      resetSettings(event);
+      resetQuizSettings(event);
       break;
     case btnOpenInstructions:
       showElement(instructionsContainer);
@@ -148,10 +148,11 @@ function manageClickEvent(event) {
       showElement(menuContainer);
       break;
     case btnPlayAgain:
+      // Restart quiz
       hideElement(quizContainer);
       hideElement(quizEndContainer);
       currentQuiz.resetQuizVariables();
-      loadCategorySelect();
+      populateAndDisplayCategorySelection();
       break;
   }
 }
@@ -161,7 +162,7 @@ function manageClickEvent(event) {
  * can be reapplied later.
  * @param {*} event Event to be handled
  */
-function removeHighlightClass(event) {
+function removeAnimationClass(event) {
   event.target.classList.remove('highlight-life-loss');
 }
 
@@ -175,8 +176,10 @@ function removeHighlightClass(event) {
 async function getData(endpoint) {
   const response = await fetch(endpoint);
   const data = await response.json();
+  // Response code 1 represents that the API doesn't have enough questions to
+  // fulfill the request.
   if (data.response_code == 1) {
-    throw new TypeError("Unexpected response from API");
+    throw new TypeError("NotEnoughQuestions");
   } else {
     return data;
   }
@@ -224,14 +227,14 @@ function disableAnswerButtons() {
  * Save custom quiz settings
  * @param {*} event Form submit event to be handled
  */
-function saveSettings(event) {
+function setCustomQuizVariables(event) {
   event.preventDefault();
   const customDifficulty = document.getElementById('custom-difficulty');
-  const customNumberOfQuestions = document.getElementById('custom-number-of-questions');
+  const customNumOfQuestions = document.getElementById('custom-number-of-questions');
   currentQuiz.customDifficultySelected = true;
-  currentQuiz.numberOfRounds = 0;
+  currentQuiz.numOfRounds = 0;
   currentQuiz.customDifficultyLevel = customDifficulty.value;
-  currentQuiz.questionsPerRound = parseInt(customNumberOfQuestions.value) - 1;
+  currentQuiz.questionsPerRound = parseInt(customNumOfQuestions.value) - 1;
   btnSaveSettings.innerHTML = "Saved!";
   setTimeout(() => {
     btnSaveSettings.innerHTML = "Save";
@@ -240,10 +243,10 @@ function saveSettings(event) {
 }
 
 /**
- * Reset quiz settings
+ * Sets the quiz settings back to default allowing a quiz with tiered difficulty
  * @param {*} event Form submit event to be handled
  */
-function resetSettings(event) {
+function resetQuizSettings(event) {
   event.preventDefault();
   window.currentQuiz = new Quiz();
   btnResetSettings.innerHTML = "Reset!";
@@ -253,14 +256,14 @@ function resetSettings(event) {
   }, 1000);
 }
 
-// --- Get and Display Categories ---
+// --- Get Categories, and Create and Append Category Buttons to the DOM ---
 
 /**
  * Call getData function with the Open Trivia Database Categories URL and
  * returns its promise
  * @returns Promise for the body of the response
  */
-function retrieveCategories() {
+function getCategories() {
   const categoriesUrl = "https://opentdb.com/api_category.php";
   let categories = getData(categoriesUrl);
   return categories;
@@ -295,7 +298,7 @@ function filterCategories(data) {
  * container
  * @param {Array} filteredCategoriesArray Array of categories
  */
-function displayCategories(filteredCategoriesArray) {
+function createAndAppendCategoryButtons(filteredCategoriesArray) {
   categoriesContainer.innerHTML = "";
   let newCategoryButton = "";
   for (let i = 0; i < filteredCategoriesArray.length; i++) {
@@ -313,22 +316,22 @@ function displayCategories(filteredCategoriesArray) {
   }
 }
 
-// --- Get and Display Questions ---
+// --- Get Questions and Answers, and Populate the Quiz Container Elements ---
 
 /**
  * Retrieve and format quiz questions
- * @param {Int} categoryId Number used to identify the category selected.
+ * @param {Int} categoryId number used to identify the category selected.
  * @returns 2D array of questions, each representing a round of the quiz
  */
-async function retrieveQuestions(categoryId) {
+async function getQuestions(categoryId) {
   const defaultDifficultyLevels = ['easy', 'medium', 'hard'];
   const customDifficulty = currentQuiz.customDifficultyLevel;
-  const numberOfRounds = currentQuiz.numberOfRounds;
+  const numOfRounds = currentQuiz.numOfRounds;
   const customDifficultySelected = currentQuiz.customDifficultySelected;
   const questionsPerRound = currentQuiz.questionsPerRound;
   let questionsUrl = "";
   allQuizQuestions = [];
-  for (let i = 0; i <= numberOfRounds; i++) {
+  for (let i = 0; i <= numOfRounds; i++) {
     if (customDifficultySelected == true) {
       // The API expects the number of questions as a human readable number so
       // the questionsPerRound+1 specified below is to account for this and
@@ -350,7 +353,7 @@ async function retrieveQuestions(categoryId) {
    * @param {String} String containing character entity references
    * @returns Converted string e.g. "&amp;" -> converts to -> "&"
    */
-  function convertToHtml(unformattedString) {
+  function convertHtml(unformattedString) {
     const tempElement = document.createElement('div');
     tempElement.innerHTML = unformattedString;
     return tempElement.innerText;
@@ -383,7 +386,7 @@ async function retrieveQuestions(categoryId) {
       // Answers returned from the API contain character entity references so
       // these are converted to HTML special characters and them trimmed to
       // ensure no extra whitespace
-      const correctAnswer = convertToHtml(element.correct_answer);
+      const correctAnswer = convertHtml(element.correct_answer);
       let question = {};
       let answerArray = [];
       question.question = element.question;
@@ -407,20 +410,20 @@ async function retrieveQuestions(categoryId) {
  * area element and the answer button elements
  * @param {Array} questions Specially formatted array of questions and answers
  */
-function displayQuestion() {
+function populateQuizContainerElements() {
   const questions = currentQuiz.questions;
-  const roundNumber = currentQuiz.currentRound;
-  const questionNumber = currentQuiz.currentQuestion;
-  questionTextArea.innerHTML = questions[roundNumber][questionNumber].question;
+  const roundNum = currentQuiz.currentRoundNum;
+  const questionNum = currentQuiz.currentQuestionNum;
+  questionTextArea.innerHTML = questions[roundNum][questionNum].question;
   for (let i = 0; i < btnAnswers.length; i++) {
-    btnAnswers[i].innerHTML = questions[roundNumber][questionNumber].answers[i];
+    btnAnswers[i].innerHTML = questions[roundNum][questionNum].answers[i];
     btnAnswers[i].classList.remove('correct-answer', 'incorrect-answer');
   }
   // New question ready so ensure the answer buttons are enabled
   enableAnswerButtons();
   //Update the displayed statistics (updated question progress will be
   //displayed)
-  updateDisplayInfo();
+  populateAndDisplayQuizProgressInfo();
 }
 
 // --- Check Selected Answer ---
@@ -429,12 +432,12 @@ function displayQuestion() {
  *  Checks the selected answer against the correct answer
  * @param {Object} element HTML element containing selected answer
  */
-function checkAnswer(element) {
+function checkSelectedAnswer(element) {
   const questions = currentQuiz.questions;
-  const roundNumber = currentQuiz.currentRound;
-  const questionNumber = currentQuiz.currentQuestion;
+  const roundNum = currentQuiz.currentRoundNum;
+  const questionNum = currentQuiz.currentQuestionNum;
   const selectedAnswer = element.innerText;
-  const correctAnswer = questions[roundNumber][questionNumber].correctAnswer;
+  const correctAnswer = questions[roundNum][questionNum].correctAnswer;
 
   setTimeout(element.classList.add('tentative-answer'));
 
@@ -443,8 +446,8 @@ function checkAnswer(element) {
   if (selectedAnswer == correctAnswer) {
     setTimeout(() => {
       element.classList.replace('tentative-answer', 'correct-answer');
-      currentQuiz.incrementTotalCorrectAnswers();
-      advanceQuiz();
+      currentQuiz.incrementTotalNumCorrectAnswers();
+      nextQuestion();
     }, 1000);
   } else {
     setTimeout(() => {
@@ -453,7 +456,7 @@ function checkAnswer(element) {
       currentQuiz.decrementLives();
       //Update the displayed statistics (updated lives remaining will be
       //displayed)
-      updateDisplayInfo();
+      populateAndDisplayQuizProgressInfo();
       // Incorrect answer so enable buttons while answer is checked
       enableAnswerButtons();
       // Check if quiz over due to no lives remaining;
@@ -464,80 +467,80 @@ function checkAnswer(element) {
         let btnAnswersArray = Array.from(btnAnswers);
         let correctAnswerButton = btnAnswersArray.find(element => element.innerHTML == correctAnswer);
         correctAnswerButton.classList.add('correct-answer');
-        quizComplete(0); // No Lives Remaining
+        handleQuizEnd(0); // No Lives Remaining
       }
     }, 1000);
   }
 }
 
-// --- Advance Quiz and Update Displayed Information ---
+// --- Advance Quiz and Update Quiz Progress Information ---
 
 /**
- * Advances quiz, increments questionNumber, roundNumber and determines if game
- * is finished
+ * Advances quiz, increments question number, round number and calling for the
+ * next question. If there anr no more questions function ends the quiz.
  */
-function advanceQuiz() {
-  const numberOfRounds = currentQuiz.numberOfRounds;
+function nextQuestion() {
+  const numOfRounds = currentQuiz.numOfRounds;
   const questionsPerRound = currentQuiz.questionsPerRound;
-  const roundNumber = currentQuiz.currentRound;
-  const questionNumber = currentQuiz.currentQuestion;
+  const roundNum = currentQuiz.currentRoundNum;
+  const questionNum = currentQuiz.currentQuestionNum;
 
-  if (questionNumber < (questionsPerRound)) {
-    // Not last question in round so increment the currentQuestion
+  if (questionNum < (questionsPerRound)) {
+    // Not last question in round so increment the currentQuestionNum
     currentQuiz.incrementQuestion();
-    setTimeout(displayQuestion, 1000);
+    setTimeout(populateQuizContainerElements, 1000);
   } else {
     // Last question in round
-    if (roundNumber != (numberOfRounds)) {
-      // Not last question in the quiz so increment currentRound
+    if (roundNum != (numOfRounds)) {
+      // Not last question in the quiz so increment currentRoundNum
       currentQuiz.incrementRound();
-      currentQuiz.resetQuestionNumber();
-      setTimeout(displayQuestion, 1000);
+      currentQuiz.resetQuestionNum();
+      setTimeout(populateQuizContainerElements, 1000);
     } else {
       // This is the last question of the last round so the quiz is over
-      quizComplete(1); // Win
+      handleQuizEnd(1); // Win
     }
   }
 }
 
 /**
- * Update numbers of lives and question remaining
+ * Update number of lives and questions remaining
  */
-function updateDisplayInfo() {
-  const livesRemaining = currentQuiz.livesRemaining;
-  const numberOfRounds = currentQuiz.numberOfRounds + 1;
-  const totalCorrectAnswers = currentQuiz.totalCorrectAnswers + 1;
-  const totalQuestions = (currentQuiz.numberOfRounds + 1) * (currentQuiz.questionsPerRound + 1);
-  const currentQuestionNumberForDisplay = numberOfRounds - (numberOfRounds - totalCorrectAnswers);
+function populateAndDisplayQuizProgressInfo() {
+  const numOfLivesRemaining = currentQuiz.numOfLivesRemaining;
+  const numOfRounds = currentQuiz.numOfRounds + 1;
+  const totalNumCorrectAnswers = currentQuiz.totalNumCorrectAnswers + 1;
+  const totalQuestions = (currentQuiz.numOfRounds + 1) * (currentQuiz.questionsPerRound + 1);
+  const currentQuestionNumForDisplay = numOfRounds - (numOfRounds - totalNumCorrectAnswers);
   const questions = currentQuiz.questions;
-  const roundNumber = currentQuiz.currentRound;
-  const questionNumber = currentQuiz.currentQuestion;
-  const currentDifficultyForDisplay = questions[roundNumber][questionNumber].difficulty;
+  const roundNum = currentQuiz.currentRoundNum;
+  const questionNum = currentQuiz.currentQuestionNum;
+  const currentDifficultyForDisplay = questions[roundNum][questionNum].difficulty;
 
   currentDifficulty.innerHTML = currentDifficultyForDisplay;
-  livesRemainingElement.innerHTML = livesRemaining;
-  questionsRemainingElement.innerHTML = `Question ${currentQuestionNumberForDisplay} of ${totalQuestions}`;
+  livesRemainingElement.innerHTML = numOfLivesRemaining;
+  questionsRemainingElement.innerHTML = `Question ${currentQuestionNumForDisplay} of ${totalQuestions}`;
 }
 
-// --- Handle Quiz End ---
+// --- Handle Quiz Completion/End ---
 
 /**
  * Handle the end of the quiz and display stats and options to proceed
- * @param {Int} winCondition Number representing win condition (0 = No lives
+ * @param {Int} winCondition number representing win condition (0 = No lives
  * remaining, 1 = Quiz Complete)
  */
-function quizComplete(winCondition) {
-  const totalCorrectAnswers = currentQuiz.totalCorrectAnswers;
+function handleQuizEnd(winCondition) {
+  const totalNumCorrectAnswers = currentQuiz.totalNumCorrectAnswers;
   let htmlContent = "";
 
   // hideElement(quizContainer);
   if (winCondition === 0) {
     htmlContent = `
-    No more lives!\nYou answered ${totalCorrectAnswers} correctly.
+    No more lives!\nYou answered ${totalNumCorrectAnswers} questions correctly.
     `;
   } else {
     htmlContent = `
-    You Win!\nYou answered ${totalCorrectAnswers} correctly.
+    You Win!\nYou answered ${totalNumCorrectAnswers} questions correctly.
     `;
   }
   quizEndStats.innerHTML = htmlContent;
@@ -546,44 +549,44 @@ function quizComplete(winCondition) {
   }, 1500);
 }
 
-// --- Load separate elements / Pages of the Quiz Application ---
+// --- Show/Hide Elements of the Quiz Container ---
 
 /**
  * Request categories and displays them once the promise has been fulfilled
  */
-async function loadCategorySelect() {
+async function populateAndDisplayCategorySelection() {
   hideElement(menuContainer);
   showElement(loadingContainer);
   try {
     // Waits for the promise to resolve
-    const categories = await retrieveCategories();
+    const categories = await getCategories();
     const filteredCategories = filterCategories(categories);
-    displayCategories(filteredCategories);
+    createAndAppendCategoryButtons(filteredCategories);
     hideElement(loadingContainer);
     showElement(categorySelectContainer);
   } catch (e) {
-    errorHandler(e);
+    handleError(e);
   }
 }
 
 /**
  * Requests the quiz questions and answers and displays them once the promise
  * has been fulfilled
- * @param {Int} categoryId Number used to identify the category selected.
+ * @param {Int} categoryId number used to identify the category selected.
  */
-async function loadQuiz(categoryId) {
+async function populateAndDisplayQuiz(categoryId) {
   hideElement(categorySelectContainer);
   showElement(loadingContainer);
 
   try {
-    const questions = await retrieveQuestions(categoryId);
+    const questions = await getQuestions(categoryId);
     // Add the question to the currentQuiz Object
     currentQuiz.questions = questions;
-    displayQuestion();
+    populateQuizContainerElements();
     hideElement(loadingContainer);
     showElement(quizContainer);
   } catch (e) {
-    errorHandler(e);
+    handleError(e);
   }
 }
 
@@ -593,7 +596,7 @@ async function loadQuiz(categoryId) {
  * Error handler - Display's the error to the user and returns to the main menu
  * @param {Object} e Error 
  */
-function errorHandler(e) {
+function handleError(e) {
   if (e instanceof TypeError) {
     if (e.message.includes("Network")) {
       console.log("Alerted user to error:\n", e, "\nReturning to main menu");
@@ -605,10 +608,12 @@ function errorHandler(e) {
     hideElement(loadingContainer);
     showElement(menuContainer);
   }
-
 }
 
-// Add event listeners for buttons
+/**
+ * Attach event listener to the 'application-container' element and create a new
+ * currentQuiz class in the global scope
+ */
 document.addEventListener('DOMContentLoaded', function () {
   applicationInitialization();
   window.currentQuiz = new Quiz();
