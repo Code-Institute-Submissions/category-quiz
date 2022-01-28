@@ -38,7 +38,7 @@ spacing consistent across browsers */
 body {
   height: 100vh;
   background-color: var(--body-background);
-  background-image: url(../images/background.jpg);
+  background-image: url(../images/background.webp);
   background-size: cover;
   font-family: 'Poppins', sans-serif;
   color: var(--body-text-colour);
