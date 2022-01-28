@@ -192,6 +192,10 @@ h1 {
   flex: 1;
 }
 
+#categories-container :last-child {
+  margin-bottom: 20px;
+}
+
 /* Quiz */
 
 #quiz-container {

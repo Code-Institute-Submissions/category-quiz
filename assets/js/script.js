@@ -273,16 +273,19 @@ function retrieveCategories() {
  */
 function filterCategories(data) {
   const categoriesArray = data.trivia_categories;
-  let filteredCategories = categoriesArray.filter(category => (
-    category.name === "General Knowledge" ||
-    category.name === "Science & Nature" ||
-    category.name === "Mythology" ||
-    category.name === "Sports" ||
-    category.name === "Geography" ||
-    category.name === "History" ||
-    category.name === "Celebrities" ||
-    category.name === "Animals"
-  ));
+  const validCategories = [
+    "General Knowledge",
+    "Science & Nature",
+    "Sports",
+    "Geography",
+    "History",
+    "Entertainment: Books",
+    "Entertainment: Film",
+    "Entertainment: Music",
+    "Entertainment: Video Games",
+    "Science: Computers"
+  ];
+  let filteredCategories = categoriesArray.filter(category => validCategories.includes(category.name));
   return filteredCategories;
 }
 
@@ -297,7 +300,13 @@ function displayCategories(filteredCategoriesArray) {
   let newCategoryButton = "";
   for (let i = 0; i < filteredCategoriesArray.length; i++) {
     newCategoryButton = document.createElement('button');
-    newCategoryButton.innerHTML = filteredCategoriesArray[i].name;
+    let buttonText = "";
+    if (filteredCategoriesArray[i].name.includes(':')) {
+      buttonText = (filteredCategoriesArray[i].name).split(':')[1].trim();
+    } else {
+      buttonText = filteredCategoriesArray[i].name;
+    }
+    newCategoryButton.innerHTML = buttonText;
     newCategoryButton.setAttribute('data-id', filteredCategoriesArray[i].id);
     newCategoryButton.classList.add('btn-category', 'btn-menu');
     categoriesContainer.appendChild(newCategoryButton);
@@ -584,7 +593,7 @@ async function loadQuiz(categoryId) {
  * Error handler - Display's the error to the user and returns to the main menu
  * @param {Object} e Error 
  */
- function errorHandler(e) {
+function errorHandler(e) {
   if (e instanceof TypeError) {
     if (e.message.includes("Network")) {
       console.log("Alerted user to error:\n", e, "\nReturning to main menu");
