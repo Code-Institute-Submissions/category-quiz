@@ -79,6 +79,18 @@ h1 {
   cursor: pointer;
 }
 
+/* No Script Error */
+
+#no-script {
+  height: 100%;
+  gap: 50px;
+  text-align: center;
+}
+
+#no-script img {
+  width: 200px;
+}
+
 /* Main Menu */
 
 #menu-container {
@@ -273,7 +285,6 @@ h1 {
 }
 
 /* Shared Classes */
-
 
 /* Flex Positioning */
 .flex {

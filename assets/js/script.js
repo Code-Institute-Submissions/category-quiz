@@ -80,10 +80,11 @@ class Quiz {
 // --- Event listeners and handlers ---
 
 /**
- * Add event listeners for buttons and the end of the animation used when a life
+ * Show Main Menu and add event listeners for buttons and the end of the animation used when a life
  * is lost
  */
 function applicationInitialization() {
+  showElement(menuContainer);
   applicationContainer.addEventListener('click', handleUserAction);
   livesRemainingContainer.addEventListener('animationend', removeAnimationClass);
 }

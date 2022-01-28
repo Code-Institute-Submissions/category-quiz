@@ -15,9 +15,21 @@
 <body class="flex flex-center">
   <!-- Application container element contains all elements of the quiz -->
   <main id="application-container">
+    <!-- Error message to be displayed if Javascript is disabled in the browser -->
+    <noscript>
+      <div id="no-script" class="flex flex-column flex-center">
+        <!-- CREDIT: SVG from https://fontawesome.com
+          URL: https://fontawesome.com/v5.15/icons/exclamation-circle?style=solid
+          License: https://fontawesome.com/license
+          Changes Made: Colour changed to #daa520
+        -->
+        <img src="assets/images/exclamation.svg" alt="Image of warning symbol">
+        <h1>Javascript must be enabled in your browser for this site to function.</h1>
+      </div>
+    </noscript>
     <!-- Menu container element contains the quiz logo and buttons to start the
     quiz and view the instructions and settings modals -->
-    <div id="menu-container">
+    <div id="menu-container" class="hidden">
       <div id="logo-container" class="flex flex-column flex-center" aria-hidden="true">
         <div class="logo-bottom">
           <div class="logo-top flex flex-center">
