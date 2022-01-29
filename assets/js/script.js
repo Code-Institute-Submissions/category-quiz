@@ -249,7 +249,7 @@ function setCustomQuizVariables(event) {
  */
 function resetQuizSettings(event) {
   event.preventDefault();
-  window.currentQuiz = new Quiz();
+  currentQuiz = new Quiz();
   btnResetSettings.innerHTML = "Reset!";
   setTimeout(() => {
     btnResetSettings.innerHTML = "Reset";
@@ -331,7 +331,7 @@ async function getQuestions(categoryId) {
   const customDifficultySelected = currentQuiz.customDifficultySelected;
   const questionsPerRound = currentQuiz.questionsPerRound;
   let questionsUrl = "";
-  allQuizQuestions = [];
+  const allQuizQuestions = [];
   for (let i = 0; i <= numOfRounds; i++) {
     if (customDifficultySelected == true) {
       // The API expects the number of questions as a human readable number so
@@ -617,5 +617,5 @@ function handleError(e) {
  */
 document.addEventListener('DOMContentLoaded', function () {
   applicationInitialization();
-  window.currentQuiz = new Quiz();
+  currentQuiz = new Quiz();
 });
