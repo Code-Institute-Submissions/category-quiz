@@ -10,9 +10,9 @@
   --icon-colour: 218, 165, 32;
   --border-colour: 218, 165, 32;
   --correct-answer: #8ac926;
-  --incorrect-answer: #ff595e;
-  --btn-menu-colour: #FFFFFF;
-  --btn-game-colour: #FFFFFF;
+  --incorrect-answer: #FF999C;
+  --btn-colour: #FFFFFF;
+  --btn-text-alt-color: #000000;
   --tentative-answer: #daa520;
 }
 
@@ -316,7 +316,7 @@ h1 {
   min-width: 275px;
   padding: 5px 0;
   border-radius: 10px;
-  background-color: var(--btn-menu-colour);
+  background-color: var(--btn-colour);
   font-size: 125%;
   font-weight: 400;
   color: var(--application-background);
@@ -325,7 +325,6 @@ h1 {
 .btn-menu:hover,
 .btn-menu:active {
   background-color: rgb(var(--border-colour));
-  color: var(--body-text-colour);
 }
 
 /* Game Buttons */
@@ -333,10 +332,9 @@ h1 {
 .btn-game {
   border: 4px solid rgb(var(--border-colour));
   border-radius: 10px;
-  background-color: var(--btn-game-colour);
+  background-color: var(--btn-colour);
   font-size: 150%;
   font-weight: 400;
-  color: var(--application-background);
 }
 
 /*  Close/Quit Buttons */
@@ -391,19 +389,19 @@ h1 {
 
 .correct-answer {
   background-color: var(--correct-answer);
-  color: var(--body-text-colour);
   border: 4px solid var(--body-text-colour);
+  color: var(--application-background);
 }
 
 .incorrect-answer {
   background-color: var(--incorrect-answer);
-  color: var(--body-text-colour);
   border: 4px solid var(--body-text-colour);
+  color: var(--application-background);
 }
 
 .tentative-answer {
   background-color: var(--tentative-answer);
-  color: var(--body-text-colour);
+  color: var(--application-background);
 }
 
 /* Animation for use when a life is lost */
