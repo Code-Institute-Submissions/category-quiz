@@ -154,18 +154,17 @@ Both are Sans-Serif font types chosen to be readable and playful.
 
 1. Category Select
 
-- A simple view that allows the visitor to select the category of questions they
-  would like. Each category button is created in the Javascript code and then
-  appended to the element. This method was used as categories are filtered by
-  name to exclude those I didn't want to include in the quiz. If a category is
-  removed from the API this method will cause the button not to rendered rather
-  than displaying an undefined/empty button.
+    - A simple view that allows the visitor to select the category of questions they would like. Each category button is created in the Javascript code and then
+    appended to the element. This method was used as categories are filtered by
+    name to exclude those I didn't want to include in the quiz. If a category is
+    removed from the API this method will cause the button not to rendered rather
+    than displaying an undefined/empty button.
 
-  The number of questions is limited to a minimum of 1 and a maximum of 20 due
-  to the limitations of question availability checking as detailed in the
-  [Future Development](#future-development) and [Testing](#testing) sections.
+    The number of questions is limited to a minimum of 1 and a maximum of 20 due
+    to the limitations of question availability checking as detailed in the
+    [Future Development](#future-development) and [Testing](#testing) sections.
 
-  ![Category Select](assets/docs/features/features-categoryselect.png)
+    ![Category Select](assets/docs/features/features-categoryselect.png)
 
 1. Question Progress and Difficulty indicator
 
