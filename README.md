@@ -310,10 +310,10 @@ The site was also tested using the WAVE Web Accessibility Evaluation Tool
 ### JSHint
 
 - No warning or errors reported using the VSCode extension.
-- No warning or errors reported using JSHint website when using the following
-  parameters (website):
+- No warning or errors reported using [JSHint website](https://jshint.com/) when using the following
+  parameters (entered at the top of the code section):
 
-    ```
+    ```javascript
     // Use ECMAScript 8
     //jshint esversion:8
 
@@ -449,7 +449,7 @@ W3 HTML Validator
 
 - Remove question count check - [Link to Commit](https://github.com/ianmeigh/category-quiz/commit/cb021fe2cc0c1b459d976f9908ea5ffdf4866b22)
 
-- When creating a custom quiz I had created a function to check (using an API
+  When creating a custom quiz I had created a function to check (using an API
   call) if there were enough questions of the visitors chosen difficulty then I
   could alert them. I misunderstood that the information returned encompassed
   all types of questions in the database (there are multiple-choice and
@@ -530,12 +530,12 @@ The project was deployed to GitHub Pages using the following steps...
 
 1. Log in to GitHub and locate the [GitHub
    Repository](https://github.com/ianmeigh/category-quiz)
-2. At the top of the Repository (not top of page), locate the "Settings" Button
+1. At the top of the Repository (not top of page), locate the "Settings" Button
    on the menu.
-3. Select "Pages" from the vertical navigation on the left of the page.
-4. Under "Source", click the dropdown displaying "None" and select "Main".
-5. Click the "Save" button.
-6. The link to the deployed page will now be displayed in the "pages" section.
+1. Select "Pages" from the vertical navigation on the left of the page.
+1. Under "Source", click the dropdown displaying "None" and select "Main".
+1. Click the "Save" button.
+1. The link to the deployed page will now be displayed in the "pages" section.
 
 ### Forking the GitHub Repository
 
@@ -545,36 +545,36 @@ repository by using the following steps...
 
 1. Log in to GitHub and locate the [GitHub
    Repository](https://github.com/ianmeigh/category-quiz)
-2. At the top of the Repository (not top of page) just above the "Settings"
+1. At the top of the Repository (not top of page) just above the "Settings"
    Button on the menu, locate the "Fork" Button.
-3. Click the button (not the number to the right) and you should now have a copy
+1. Click the button (not the number to the right) and you should now have a copy
    of the original repository in your GitHub account.
 
 ### Making a Local Clone
 
 1. Log in to GitHub and locate the [GitHub
    Repository](https://github.com/ianmeigh/category-quiz)
-2. Under the repository name, click "Code".
-3. To clone the repository using HTTPS, under "HTTPS", copy the link.
-4. Open your local terminal with git installed
-5. Change the current working directory to the location where you want the
+1. Under the repository name, click "Code".
+1. To clone the repository using HTTPS, under "HTTPS", copy the link.
+1. Open your local terminal with git installed
+1. Change the current working directory to the location where you want the
    cloned directory to be created.
-6. Type `git clone`, and then paste the URL you copied in Step 3.
+1. Type `git clone`, and then paste the URL you copied in Step 3.
 
-```
-$ git clone https://github.com/ianmeigh/category-quiz.git
-```
+    ```console
+    $ git clone https://github.com/ianmeigh/category-quiz.git
+    ```
 
-7. Press Enter. Your local clone will be created.
+1. Press Enter. Your local clone will be created.
 
-```
-$ git clone https://github.com/ianmeigh/category-quiz.git
-> Cloning into `test-dir`...
-> remote: Counting objects: 10, done.
-> remote: Compressing objects: 100% (8/8), done.
-> remove: Total 10 (delta 1), reused 10 (delta 1)
-> Unpacking objects: 100% (10/10), done.
-```
+    ```console
+    $ git clone https://github.com/ianmeigh/category-quiz.git
+    > Cloning into `test-dir`...
+    > remote: Counting objects: 10, done.
+    > remote: Compressing objects: 100% (8/8), done.
+    > remove: Total 10 (delta 1), reused 10 (delta 1)
+    > Unpacking objects: 100% (10/10), done.
+    ```
 
 [Click
 here](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository#cloning-a-repository-to-github-desktop)
